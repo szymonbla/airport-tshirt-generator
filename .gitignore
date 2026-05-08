@@ -4,6 +4,8 @@ logs
 bun-debug.log*
 
 node_modules
+client/dist
+client/dist-ssr
 dist
 dist-ssr
 *.local
