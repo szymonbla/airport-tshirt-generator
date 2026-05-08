@@ -17,9 +17,6 @@ export default defineConfig({
   },
   test: {
     environment: 'node',
-    environmentMatchGlobs: [
-      ['src/views/**', 'jsdom'],
-    ],
     setupFiles: ['./src/test/setup.ts'],
   },
 })

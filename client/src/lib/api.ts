@@ -2,15 +2,14 @@ import type { RecipientSizeResult, NotifyResult } from './types'
 
 const BASE = import.meta.env.VITE_API_URL ?? ''
 
-async function request<T>(path: string, init?: RequestInit & { body?: unknown }): Promise<T> {
-  const isBodyObject = init?.body !== undefined && typeof init.body !== 'string'
+async function request<T>(path: string, init?: RequestInit, jsonBody?: object): Promise<T> {
   const res = await fetch(`${BASE}${path}`, {
     ...init,
     headers: {
-      ...(isBodyObject ? { 'Content-Type': 'application/json' } : {}),
+      ...(jsonBody !== undefined ? { 'Content-Type': 'application/json' } : {}),
       ...init?.headers,
     },
-    body: isBodyObject ? JSON.stringify(init.body) : (init?.body as BodyInit | undefined),
+    body: jsonBody !== undefined ? JSON.stringify(jsonBody) : init?.body,
   })
 
   if (!res.ok) {
@@ -25,8 +24,8 @@ export const apiClient = {
   get<T>(path: string): Promise<T> {
     return request<T>(path)
   },
-  post<T>(path: string, body: unknown): Promise<T> {
-    return request<T>(path, { method: 'POST', body })
+  post<T>(path: string, body: object): Promise<T> {
+    return request<T>(path, { method: 'POST' }, body)
   },
 }
 

@@ -8,7 +8,7 @@ export interface AssignmentPayload {
   recipient: string
 }
 
-export const VALID_SIZES = ['XS', 'S', 'M', 'L', 'XL', '2XL'] as const
+export const VALID_SIZES = ['MEGA MAŁY', 'MAŁY, ALE ŚMIERDZI JAK DUŻY', 'ŚREDNIA AZJATYCKA', 'DUŻY EUROPEJSKI', 'GRUBY', '2X GRUBY', '3X GRUBY'] as const
 export type Size = typeof VALID_SIZES[number]
 
 export type RecipientSizeResult = { known: true; size: string } | { known: false }

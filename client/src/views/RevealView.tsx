@@ -46,7 +46,7 @@ export default function RevealView() {
   const notifyMutation = useMutation({
     mutationFn: () => subscribeNotification(assignment!.giver, email, assignment!.recipient),
     onSuccess: (result) => {
-      if (result.alreadyKnown) {
+      if ('alreadyKnown' in result) {
         queryClient.setQueryData(['recipientSize', assignment?.recipient], { known: true, size: result.size })
       } else {
         setNotified(true)
@@ -75,7 +75,7 @@ export default function RevealView() {
         <div className="text-center max-w-sm w-full space-y-6">
           <div>
             <p className="text-sm text-gray-500 uppercase tracking-wide mb-1">Hej, {assignment.giver}!</p>
-            <h1 className="text-2xl font-bold">Podaj swój rozmiar koszulki</h1>
+            <h1 className="text-2xl font-bold">Podaj swój rozmiar 🍆</h1>
             <p className="text-gray-500 text-sm mt-1">Wymagane przed ujawnieniem przydziału</p>
           </div>
           <div className="flex flex-wrap gap-2 justify-center">
