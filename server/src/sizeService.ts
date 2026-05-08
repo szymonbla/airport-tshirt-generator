@@ -2,7 +2,7 @@ import { eq } from 'drizzle-orm'
 import { participants, pendingNotifications } from './schema.js'
 import type { DrizzleDb } from './db.js'
 
-const VALID_SIZES = ['XS', 'S', 'M', 'L', 'XL', '2XL'] as const
+const VALID_SIZES = ['MEGA MAŁY', 'MAŁY, ALE ŚMIERDZI JAK DUŻY', 'ŚREDNIA AZJATYCKA', 'DUŻY EUROPEJSKI', 'GRUBY', '2X GRUBY', '3X GRUBY'] as const
 
 export type RecipientSizeResult = { known: true; size: string } | { known: false }
 export type NotifyResult = { subscribed: true } | { alreadyKnown: true; size: string }

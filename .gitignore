@@ -30,3 +30,11 @@ dist-ssr
 *.db
 *.db-shm
 *.db-wal
+
+# Build caches
+.vite/
+.wrangler/
+.playwright-mcp/
+
+# Playwright screenshots
+server/*.png
