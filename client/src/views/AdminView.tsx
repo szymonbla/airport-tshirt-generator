@@ -28,99 +28,50 @@ export default function AdminView() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', fontFamily: 'var(--font-sans)', color: 'var(--color-ink)' }}>
-      <div style={{ display: 'flex', alignItems: 'center', padding: '20px 24px 0', maxWidth: 600, margin: '0 auto' }}>
+    <div className="min-h-screen font-sans text-ink">
+      <div className="flex items-center px-6 pt-5 max-w-[600px] mx-auto">
         <Wordmark />
       </div>
 
-      <div style={{ maxWidth: 600, margin: '24px auto', padding: '0 16px 40px' }}>
-        <div style={{
-          background: '#fff',
-          borderRadius: 22,
-          boxShadow: '0 1px 0 rgba(45,49,66,0.06), 0 8px 24px -12px rgba(45,49,66,0.18)',
-          padding: '32px 28px',
-        }}>
-          <div style={{ marginBottom: 28 }}>
-            <div style={{
-              fontFamily: 'var(--font-sans)',
-              fontWeight: 700,
-              fontSize: 11,
-              letterSpacing: '0.06em',
-              textTransform: 'uppercase',
-              color: 'rgba(45,49,66,0.55)',
-              marginBottom: 8,
-            }}>Organizator</div>
-            <h1 style={{
-              fontFamily: 'var(--font-heading)',
-              fontWeight: 800,
-              fontSize: 32,
-              lineHeight: 1.1,
-              letterSpacing: '-0.02em',
-              margin: 0,
-            }}>Wyjazdy</h1>
+      <div className="max-w-[600px] mx-auto mt-6 px-4 pb-10">
+        <div className="bg-white rounded-[22px] shadow-[0_1px_0_rgba(45,49,66,0.06),0_8px_24px_-12px_rgba(45,49,66,0.18)] py-8 px-7">
+          <div className="mb-7">
+            <div className="font-sans font-bold text-[11px] tracking-[0.06em] uppercase text-[rgba(45,49,66,0.55)] mb-2">
+              Organizator
+            </div>
+            <h1 className="font-heading font-extrabold text-[32px] leading-[1.1] tracking-[-0.02em] m-0">
+              Wyjazdy
+            </h1>
           </div>
 
-          <form onSubmit={handleCreate} style={{ display: 'flex', gap: 10, marginBottom: 28 }}>
+          <form onSubmit={handleCreate} className="flex gap-2.5 mb-7">
             <input
               value={name}
               onChange={e => setName(e.target.value)}
               placeholder="Nazwa wyjazdu"
-              style={{
-                flex: 1,
-                background: '#fff',
-                border: '1.5px solid var(--color-sand-500)',
-                borderRadius: 14,
-                padding: '10px 14px',
-                fontFamily: 'var(--font-sans)',
-                fontSize: 15,
-                color: 'var(--color-ink)',
-                outline: 'none',
-              }}
-              onFocus={e => { e.currentTarget.style.borderColor = 'var(--color-teal-500)'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(168,216,220,0.50)' }}
-              onBlur={e => { e.currentTarget.style.borderColor = 'var(--color-sand-500)'; e.currentTarget.style.boxShadow = 'none' }}
+              className="flex-1 bg-white border-[1.5px] border-sand-500 rounded-[14px] px-3.5 py-2.5 font-sans text-[15px] text-ink outline-none focus:border-teal-500 focus:ring-3 focus:ring-teal-300/50"
             />
             <button
               type="submit"
               disabled={!name.trim() || creating}
-              style={{
-                fontFamily: 'var(--font-heading)',
-                fontWeight: 700,
-                fontSize: 15,
-                padding: '10px 20px',
-                borderRadius: 999,
-                border: '1.5px solid var(--color-ink)',
-                background: name.trim() ? 'var(--color-peach-300)' : 'var(--color-sand-200)',
-                color: 'var(--color-ink)',
-                cursor: name.trim() && !creating ? 'pointer' : 'not-allowed',
-                opacity: name.trim() && !creating ? 1 : 0.5,
-                whiteSpace: 'nowrap',
-              }}
+              className={`font-heading font-bold text-[15px] px-5 py-2.5 rounded-full border-[1.5px] border-ink text-ink whitespace-nowrap transition-opacity ${name.trim() ? 'bg-peach-300 cursor-pointer opacity-100' : 'bg-sand-200 cursor-not-allowed opacity-50'}`}
             >Nowy Wyjazd</button>
           </form>
 
           {loading ? (
-            <div style={{ color: 'var(--color-ink-soft)', fontSize: 14 }}>Ładowanie...</div>
+            <div className="text-ink-soft text-sm">Ładowanie...</div>
           ) : trips.length === 0 ? (
-            <div style={{ color: 'var(--color-ink-soft)', fontSize: 14 }}>Brak wyjazdów. Stwórz pierwszy!</div>
+            <div className="text-ink-soft text-sm">Brak wyjazdów. Stwórz pierwszy!</div>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <div className="flex flex-col gap-2.5">
               {trips.map(trip => (
                 <Link
                   key={trip.id}
                   to={`/admin/trip/${trip.id}`}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    background: 'var(--color-cream)',
-                    borderRadius: 14,
-                    padding: '14px 18px',
-                    textDecoration: 'none',
-                    color: 'var(--color-ink)',
-                  }}
+                  className="flex items-center justify-between bg-cream rounded-[14px] px-[18px] py-3.5 no-underline text-ink"
                 >
-                  <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: 16 }}>{trip.name}</span>
-                  <span style={{ fontSize: 13, color: 'var(--color-ink-soft)' }}>→</span>
+                  <span className="font-heading font-bold text-base">{trip.name}</span>
+                  <span className="text-[13px] text-ink-soft">→</span>
                 </Link>
               ))}
             </div>

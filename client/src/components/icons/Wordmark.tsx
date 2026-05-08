@@ -3,31 +3,15 @@ interface Props {
 }
 
 export function Wordmark({ small = false }: Props) {
-  const headingSize = small ? 28 : 36;
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+    <div className="flex flex-col gap-0.5">
       <span
-        style={{
-          fontFamily: "var(--font-heading)",
-          fontWeight: 800,
-          fontSize: headingSize,
-          color: "var(--color-ink)",
-          lineHeight: 1,
-          letterSpacing: "-0.02em",
-        }}
+        className={`font-heading font-extrabold text-ink leading-none tracking-[-0.02em] ${small ? 'text-[28px]' : 'text-[36px]'}`}
       >
         szmatex
       </span>
       <span
-        style={{
-          fontFamily: "var(--font-hand)",
-          fontWeight: 700,
-          fontSize: small ? 16 : 20,
-          color: "var(--color-peach-700)",
-          transform: "rotate(-3deg)",
-          display: "inline-block",
-          lineHeight: 1,
-        }}
+        className={`font-hand font-bold text-peach-700 -rotate-3 inline-block leading-none ${small ? 'text-[16px]' : 'text-[20px]'}`}
       >
         szmata dla Ciebie :)
       </span>

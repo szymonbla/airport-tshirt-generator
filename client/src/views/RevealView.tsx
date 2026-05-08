@@ -13,8 +13,8 @@ function storageKey(r: string) { return `reveal:${r}` }
 
 function PageShell({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '24px 16px 40px' }}>
-      <div style={{ width: '100%', maxWidth: 540, display: 'flex', flexDirection: 'column', gap: 24 }}>
+    <div className="min-h-screen flex flex-col items-center px-4 pt-6 pb-10">
+      <div className="w-full max-w-[540px] flex flex-col gap-6">
         <div><Wordmark small /></div>
         {children}
       </div>
@@ -22,15 +22,9 @@ function PageShell({ children }: { children: React.ReactNode }) {
   )
 }
 
-function Card({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) {
+function Card({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <div style={{
-      background: '#fff',
-      borderRadius: 22,
-      boxShadow: '0 1px 0 rgba(45,49,66,0.06), 0 8px 24px -12px rgba(45,49,66,0.18)',
-      padding: '32px 28px',
-      ...style,
-    }}>
+    <div className={`bg-white rounded-[22px] shadow-[0_1px_0_rgba(45,49,66,0.06),0_8px_24px_-12px_rgba(45,49,66,0.18)] py-8 px-7 ${className ?? ''}`}>
       {children}
     </div>
   )
@@ -38,68 +32,25 @@ function Card({ children, style }: { children: React.ReactNode; style?: React.CS
 
 function TagCard({ recipient, sizeContent }: { recipient: string; sizeContent: React.ReactNode }) {
   return (
-    <div style={{
-      background: 'var(--color-cream-2)',
-      borderRadius: 22,
-      padding: '28px 24px',
-      position: 'relative',
-      textAlign: 'center',
-    }}>
-      <span style={{
-        position: 'absolute',
-        top: 16,
-        right: 16,
-        fontFamily: 'var(--font-hand)',
-        fontWeight: 700,
-        fontSize: 16,
-        color: 'var(--color-peach-700)',
-        background: 'var(--color-cream)',
-        border: '1.5px dashed var(--color-peach-500)',
-        borderRadius: 10,
-        padding: '3px 10px',
-        transform: 'rotate(-4deg)',
-        display: 'inline-block',
-      }}>prezentowy</span>
+    <div className="bg-cream-2 rounded-[22px] p-[28px_24px] relative text-center">
+      <span className="absolute top-4 right-4 font-hand font-bold text-base text-peach-700 bg-cream border-[1.5px] border-dashed border-peach-500 rounded-[10px] px-2.5 py-[3px] -rotate-[4deg] inline-block">
+        prezentowy
+      </span>
 
       <TshirtIcon size={72} />
 
-      <div style={{
-        fontFamily: 'var(--font-sans)',
-        fontWeight: 700,
-        fontSize: 11,
-        letterSpacing: '0.06em',
-        textTransform: 'uppercase',
-        color: 'rgba(45,49,66,0.55)',
-        marginTop: 16,
-        marginBottom: 8,
-      }}>Kupujesz koszulkę dla</div>
+      <div className="font-sans font-bold text-[11px] tracking-[0.06em] uppercase text-[rgba(45,49,66,0.55)] mt-4 mb-2">
+        Kupujesz koszulkę dla
+      </div>
 
-      <div style={{
-        fontFamily: 'var(--font-heading)',
-        fontWeight: 800,
-        fontSize: 48,
-        lineHeight: 1.05,
-        letterSpacing: '-0.02em',
-        color: 'var(--color-ink)',
-        marginBottom: 16,
-      }}>{recipient}</div>
+      <div className="font-heading font-extrabold text-[48px] leading-[1.05] tracking-[-0.02em] text-ink mb-4">
+        {recipient}
+      </div>
 
-      <div style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: 12,
-        background: '#fff',
-        borderRadius: 14,
-        padding: '10px 20px',
-      }}>
-        <span style={{
-          fontFamily: 'var(--font-sans)',
-          fontWeight: 700,
-          fontSize: 11,
-          letterSpacing: '0.06em',
-          textTransform: 'uppercase',
-          color: 'rgba(45,49,66,0.55)',
-        }}>Rozmiar</span>
+      <div className="inline-flex items-center gap-3 bg-white rounded-[14px] px-5 py-2.5">
+        <span className="font-sans font-bold text-[11px] tracking-[0.06em] uppercase text-[rgba(45,49,66,0.55)]">
+          Rozmiar
+        </span>
         {sizeContent}
       </div>
     </div>
@@ -155,38 +106,19 @@ export default function RevealView() {
   if (!assignment) {
     return (
       <PageShell>
-        <Card style={{ textAlign: 'center', padding: '48px 28px' }}>
-          <div style={{
-            fontFamily: 'var(--font-heading)',
-            fontWeight: 800,
-            fontSize: 88,
-            color: 'var(--color-peach-500)',
-            lineHeight: 1,
-            marginBottom: 24,
-          }}>¯\_(ツ)_/¯</div>
-          <h2 style={{
-            fontFamily: 'var(--font-heading)',
-            fontWeight: 700,
-            fontSize: 26,
-            margin: '0 0 12px',
-            color: 'var(--color-ink)',
-          }}>Ten link jest dziwny.</h2>
-          <p style={{ color: 'var(--color-ink-soft)', fontSize: 15, lineHeight: 1.5, marginBottom: 28 }}>
+        <Card className="text-center px-7 py-12">
+          <div className="font-heading font-extrabold text-[88px] text-peach-500 leading-none mb-6">
+            ¯\_(ツ)_/¯
+          </div>
+          <h2 className="font-heading font-bold text-[26px] m-0 mb-3 text-ink">
+            Ten link jest dziwny.
+          </h2>
+          <p className="text-ink-soft text-[15px] leading-[1.5] mb-7">
             Wygląda na uszkodzony albo skrócony w połowie. Poproś organizatora o ponowne przesłanie.
           </p>
           <button
             onClick={() => navigate('/')}
-            style={{
-              fontFamily: 'var(--font-sans)',
-              fontWeight: 600,
-              fontSize: 14,
-              padding: '8px 20px',
-              borderRadius: 999,
-              border: '1.5px solid rgba(45,49,66,0.20)',
-              background: 'transparent',
-              color: 'var(--color-ink-soft)',
-              cursor: 'pointer',
-            }}
+            className="font-sans font-semibold text-[14px] px-5 py-2 rounded-full border-[1.5px] border-[rgba(45,49,66,0.20)] bg-transparent text-ink-soft cursor-pointer"
           >Wróć do strony głównej</button>
         </Card>
       </PageShell>
@@ -198,48 +130,25 @@ export default function RevealView() {
   if (state === 'gate') {
     return (
       <PageShell>
-        <Card style={{ textAlign: 'center' }}>
-          <div style={{
-            fontFamily: 'var(--font-sans)',
-            fontWeight: 700,
-            fontSize: 11,
-            letterSpacing: '0.06em',
-            textTransform: 'uppercase',
-            color: 'rgba(45,49,66,0.55)',
-            marginBottom: 8,
-          }}>Hej, {assignment.giver}!</div>
+        <Card className="text-center">
+          <div className="font-sans font-bold text-[11px] tracking-[0.06em] uppercase text-[rgba(45,49,66,0.55)] mb-2">
+            Hej, {assignment.giver}!
+          </div>
 
-          <h1 style={{
-            fontFamily: 'var(--font-heading)',
-            fontWeight: 800,
-            fontSize: 32,
-            lineHeight: 1.1,
-            letterSpacing: '-0.02em',
-            margin: '0 0 10px',
-            color: 'var(--color-ink)',
-          }}>Wpisz swój rozmiar</h1>
+          <h1 className="font-heading font-extrabold text-[32px] leading-[1.1] tracking-[-0.02em] m-0 mb-2.5 text-ink">
+            Wpisz swój rozmiar
+          </h1>
 
-          <p style={{ color: 'var(--color-ink-soft)', fontSize: 15, lineHeight: 1.5, marginBottom: 24 }}>
+          <p className="text-ink-soft text-[15px] leading-[1.5] mb-6">
             Twój prezentowy ujawni się dopiero po naciśnięciu walizki. Bez podglądania!
           </p>
 
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 8, marginBottom: 28 }}>
+          <div className="flex flex-wrap justify-center gap-2 mb-7">
             {VALID_SIZES.map(s => (
               <button
                 key={s}
                 onClick={() => setSelectedSize(s)}
-                style={{
-                  padding: '8px 16px',
-                  borderRadius: 999,
-                  border: `1.5px solid ${selectedSize === s ? 'var(--color-ink)' : 'var(--color-sand-500)'}`,
-                  background: selectedSize === s ? 'var(--color-ink)' : '#fff',
-                  color: selectedSize === s ? 'var(--color-cream)' : 'var(--color-ink-soft)',
-                  fontFamily: 'var(--font-sans)',
-                  fontWeight: 600,
-                  fontSize: 15,
-                  cursor: 'pointer',
-                  transition: 'all 0.12s',
-                }}
+                className={`px-4 py-2 rounded-full border-[1.5px] font-sans font-semibold text-[15px] cursor-pointer transition-all duration-[120ms] ${selectedSize === s ? 'border-ink bg-ink text-cream' : 'border-sand-500 bg-white text-ink-soft'}`}
               >{s}</button>
             ))}
           </div>
@@ -247,44 +156,15 @@ export default function RevealView() {
           <button
             onClick={() => submitMutation.mutate()}
             disabled={!selectedSize || submitMutation.isPending}
-            style={{
-              width: '100%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 12,
-              padding: '18px 28px',
-              borderRadius: 22,
-              border: '1.5px solid var(--color-ink)',
-              background: 'var(--color-peach-300)',
-              color: 'var(--color-ink)',
-              fontFamily: 'var(--font-heading)',
-              fontWeight: 800,
-              fontSize: 20,
-              cursor: selectedSize ? 'pointer' : 'not-allowed',
-              opacity: selectedSize ? 1 : 0.5,
-              boxShadow: '0 3px 0 var(--color-ink)',
-              transition: 'box-shadow 0.12s, transform 0.12s',
-              pointerEvents: !selectedSize || submitMutation.isPending ? 'none' : 'auto',
-            }}
-            onMouseDown={e => { if (selectedSize) { (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 0 var(--color-ink)'; (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(3px)' } }}
-            onMouseUp={e => { (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 3px 0 var(--color-ink)'; (e.currentTarget as HTMLButtonElement).style.transform = '' }}
-            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 3px 0 var(--color-ink)'; (e.currentTarget as HTMLButtonElement).style.transform = '' }}
+            className={`w-full flex items-center justify-center gap-3 py-[18px] px-7 rounded-[22px] border-[1.5px] border-ink bg-peach-300 text-ink font-heading font-extrabold text-[20px] transition-[box-shadow,transform] duration-[120ms] shadow-[0_3px_0_var(--color-ink)] active:shadow-none active:translate-y-[3px] ${selectedSize ? 'cursor-pointer opacity-100' : 'cursor-not-allowed opacity-50 pointer-events-none'}`}
           >
             <SuitcaseIcon size={36} wobble={!submitMutation.isPending} />
             {submitMutation.isPending ? 'Zapisuję…' : 'Rozpakuj walizkę'}
           </button>
 
-          <div style={{
-            marginTop: 12,
-            fontFamily: 'var(--font-hand)',
-            fontWeight: 700,
-            fontSize: 17,
-            color: 'var(--color-peach-700)',
-            fontStyle: 'italic',
-            transform: 'rotate(-1.5deg)',
-            display: 'block',
-          }}>↑ zaznacz rozmiar, potem klik</div>
+          <div className="mt-3 font-hand font-bold text-[17px] text-peach-700 italic -rotate-[1.5deg] block">
+            ↑ zaznacz rozmiar, potem klik
+          </div>
         </Card>
       </PageShell>
     )
@@ -300,112 +180,49 @@ export default function RevealView() {
           recipient={assignment.recipient}
           sizeContent={
             isKnown ? (
-              <span style={{
-                fontFamily: 'var(--font-heading)',
-                fontWeight: 700,
-                fontSize: 22,
-                color: 'var(--color-ink)',
-              }}>{knownSize}</span>
+              <span className="font-heading font-bold text-[22px] text-ink">{knownSize}</span>
             ) : (
-              <span style={{
-                fontFamily: 'var(--font-hand)',
-                fontWeight: 700,
-                fontSize: 20,
-                color: 'var(--color-peach-700)',
-                fontStyle: 'italic',
-              }}>jeszcze nie podany</span>
+              <span className="font-hand font-bold text-[20px] text-peach-700 italic">jeszcze nie podany</span>
             )
           }
         />
 
         {isKnown ? (
-          <div style={{ marginTop: 20, textAlign: 'center' }}>
-            <p style={{ color: 'var(--color-ink-soft)', fontSize: 14, margin: 0 }}>
+          <div className="mt-5 text-center">
+            <p className="text-ink-soft text-sm m-0">
               Znamy już rozmiar — czas na zakupy!
             </p>
           </div>
         ) : notified ? (
-          <div style={{
-            marginTop: 16,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 12,
-            background: 'rgba(181,201,154,0.30)',
-            border: '1.5px solid var(--color-olive-300)',
-            borderRadius: 14,
-            padding: '14px 18px',
-          }}>
-            <span style={{
-              width: 28,
-              height: 28,
-              borderRadius: '50%',
-              background: 'var(--color-olive-600)',
-              color: '#fff',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: 14,
-              fontWeight: 700,
-              flexShrink: 0,
-            }}>✓</span>
-            <p style={{ margin: 0, fontSize: 14, color: 'var(--color-ink)', lineHeight: 1.5 }}>
+          <div className="mt-4 flex items-center gap-3 bg-[rgba(181,201,154,0.30)] border-[1.5px] border-olive-300 rounded-[14px] px-[18px] py-3.5">
+            <span className="w-7 h-7 rounded-full bg-olive-600 text-white flex items-center justify-center text-[14px] font-bold shrink-0">✓</span>
+            <p className="m-0 text-sm text-ink leading-[1.5]">
               Wyślemy Ci email, gdy <strong>{assignment.recipient}</strong> poda swój rozmiar.
             </p>
           </div>
         ) : (
-          <div style={{
-            marginTop: 16,
-            background: 'var(--color-cream-2)',
-            borderRadius: 14,
-            padding: '20px',
-          }}>
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14, marginBottom: 16 }}>
+          <div className="mt-4 bg-cream-2 rounded-[14px] p-5">
+            <div className="flex items-start gap-3.5 mb-4">
               <EnvelopeIcon size={36} />
               <div>
-                <div style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontWeight: 700,
-                  fontSize: 16,
-                  color: 'var(--color-ink)',
-                  marginBottom: 4,
-                }}>Powiadom mnie, gdy {assignment.recipient} poda rozmiar</div>
-                <div style={{ fontSize: 13, color: 'var(--color-ink-soft)' }}>Wyślemy jeden mail. Bez spamu, słowo.</div>
+                <div className="font-heading font-bold text-base text-ink mb-1">
+                  Powiadom mnie, gdy {assignment.recipient} poda rozmiar
+                </div>
+                <div className="text-[13px] text-ink-soft">Wyślemy jeden mail. Bez spamu, słowo.</div>
               </div>
             </div>
-            <div style={{ display: 'flex', gap: 8 }}>
+            <div className="flex gap-2">
               <input
                 type="email"
                 placeholder="twoj@email.com"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
-                style={{
-                  flex: 1,
-                  background: '#fff',
-                  border: '1.5px solid var(--color-sand-500)',
-                  borderRadius: 14,
-                  padding: '10px 14px',
-                  fontFamily: 'var(--font-sans)',
-                  fontSize: 14,
-                  color: 'var(--color-ink)',
-                  outline: 'none',
-                }}
+                className="flex-1 bg-white border-[1.5px] border-sand-500 rounded-[14px] px-3.5 py-2.5 font-sans text-[14px] text-ink outline-none focus:border-teal-500 focus:ring-3 focus:ring-teal-300/50"
               />
               <button
                 onClick={() => notifyMutation.mutate()}
                 disabled={!email || notifyMutation.isPending}
-                style={{
-                  fontFamily: 'var(--font-sans)',
-                  fontWeight: 600,
-                  fontSize: 14,
-                  padding: '10px 16px',
-                  borderRadius: 14,
-                  border: '1.5px solid var(--color-peach-500)',
-                  background: 'var(--color-peach-300)',
-                  color: 'var(--color-ink)',
-                  cursor: email ? 'pointer' : 'not-allowed',
-                  opacity: email ? 1 : 0.5,
-                  whiteSpace: 'nowrap',
-                }}
+                className={`font-sans font-semibold text-[14px] px-4 py-2.5 rounded-[14px] border-[1.5px] border-peach-500 bg-peach-300 text-ink whitespace-nowrap transition-opacity ${email ? 'cursor-pointer opacity-100' : 'cursor-not-allowed opacity-50'}`}
               >{notifyMutation.isPending ? 'Zapisuję…' : 'Powiadom mnie'}</button>
             </div>
           </div>

@@ -1,6 +1,5 @@
-/// <reference types="bun-types" />
-import { Database } from 'bun:sqlite'
-import { drizzle } from 'drizzle-orm/bun-sqlite'
+import Database from 'better-sqlite3'
+import { drizzle } from 'drizzle-orm/better-sqlite3'
 import * as schema from './schema.js'
 import type { DrizzleDb } from './db.js'
 
@@ -28,5 +27,5 @@ export function openTestDb(): DrizzleDb {
       created_at TEXT NOT NULL
     );
   `)
-  return drizzle(sqlite, { schema }) as unknown as DrizzleDb
+  return drizzle(sqlite as any, { schema }) as unknown as DrizzleDb
 }

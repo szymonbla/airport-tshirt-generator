@@ -25,19 +25,7 @@ function CopyButton({ text }: { text: string }) {
   return (
     <button
       onClick={handleCopy}
-      style={{
-        fontFamily: 'var(--font-heading)',
-        fontWeight: 700,
-        fontSize: 13,
-        padding: '6px 14px',
-        borderRadius: 10,
-        border: '1.5px solid var(--color-ink)',
-        background: copied ? 'var(--color-olive-300)' : 'var(--color-cream)',
-        color: 'var(--color-ink)',
-        cursor: 'pointer',
-        whiteSpace: 'nowrap',
-        transition: 'background 0.15s',
-      }}
+      className={`font-heading font-bold text-[13px] px-3.5 py-1.5 rounded-[10px] border-[1.5px] border-ink text-ink cursor-pointer whitespace-nowrap transition-[background] duration-150 ${copied ? 'bg-olive-300' : 'bg-cream'}`}
     >
       {copied ? '✓ Skopiowano!' : 'Kopiuj'}
     </button>
@@ -95,7 +83,7 @@ export default function TripDetailView() {
 
   if (loading) {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-sans)' }}>
+      <div className="min-h-screen flex items-center justify-center font-sans">
         Ładowanie...
       </div>
     )
@@ -103,7 +91,7 @@ export default function TripDetailView() {
 
   if (!trip) {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-sans)' }}>
+      <div className="min-h-screen flex items-center justify-center font-sans">
         Nie znaleziono wyjazdu.
       </div>
     )
@@ -113,89 +101,54 @@ export default function TripDetailView() {
   const base = window.location.origin + window.location.pathname
 
   return (
-    <div style={{ minHeight: '100vh', fontFamily: 'var(--font-sans)', color: 'var(--color-ink)' }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px 24px 0', maxWidth: 600, margin: '0 auto' }}>
+    <div className="min-h-screen font-sans text-ink">
+      <div className="flex items-center justify-between px-6 pt-5 max-w-[600px] mx-auto">
         <Wordmark />
-        <span style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 8,
-          background: 'var(--color-teal-100)',
-          color: 'var(--color-teal-700)',
-          borderRadius: 999,
-          padding: '6px 14px 6px 6px',
-          fontFamily: 'var(--font-sans)',
-          fontWeight: 700,
-          fontSize: 13,
-          letterSpacing: '0.04em',
-          textTransform: 'uppercase',
-        }}>
-          <span style={{
-            width: 22, height: 22, borderRadius: '50%',
-            background: 'var(--color-ink)', color: 'var(--color-cream)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: 12,
-          }}>{hasAssignments ? 2 : 1}</span>
+        <span className="flex items-center gap-2 bg-teal-100 text-teal-700 rounded-full py-1.5 pr-3.5 pl-1.5 font-sans font-bold text-[13px] tracking-[0.04em] uppercase">
+          <span className="w-[22px] h-[22px] rounded-full bg-ink text-cream flex items-center justify-center font-heading font-bold text-[12px]">
+            {hasAssignments ? 2 : 1}
+          </span>
           {hasAssignments ? 'Wyślij linki' : 'Zbiórka załogi'}
         </span>
       </div>
 
-      <div style={{ maxWidth: 600, margin: '24px auto', padding: '0 16px 40px' }}>
-        <div style={{ marginBottom: 16 }}>
-          <Link to="/admin" style={{ fontSize: 13, color: 'var(--color-ink-soft)', textDecoration: 'none' }}>
+      <div className="max-w-[600px] mx-auto mt-6 px-4 pb-10">
+        <div className="mb-4">
+          <Link to="/admin" className="text-[13px] text-ink-soft no-underline">
             ← Wyjazdy
           </Link>
         </div>
 
-        <div style={{
-          background: '#fff',
-          borderRadius: 22,
-          boxShadow: '0 1px 0 rgba(45,49,66,0.06), 0 8px 24px -12px rgba(45,49,66,0.18)',
-          padding: '32px 28px',
-        }}>
+        <div className="bg-white rounded-[22px] shadow-[0_1px_0_rgba(45,49,66,0.06),0_8px_24px_-12px_rgba(45,49,66,0.18)] py-8 px-7">
           {!hasAssignments ? (
             <>
-              <div style={{ marginBottom: 24 }}>
-                <div style={{
-                  fontFamily: 'var(--font-sans)', fontWeight: 700, fontSize: 11,
-                  letterSpacing: '0.06em', textTransform: 'uppercase',
-                  color: 'rgba(45,49,66,0.55)', marginBottom: 8,
-                }}>Organizator</div>
-                <h1 style={{
-                  fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: 32,
-                  lineHeight: 1.1, letterSpacing: '-0.02em', margin: 0,
-                }}>{trip.name}</h1>
+              <div className="mb-6">
+                <div className="font-sans font-bold text-[11px] tracking-[0.06em] uppercase text-[rgba(45,49,66,0.55)] mb-2">
+                  Organizator
+                </div>
+                <h1 className="font-heading font-extrabold text-[32px] leading-[1.1] tracking-[-0.02em] m-0">
+                  {trip.name}
+                </h1>
               </div>
 
               <form onSubmit={handleSubmit(onSubmit)}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                <div className="flex flex-col gap-2.5">
                   {fields.map((field, i) => {
                     const isLast = i === fields.length - 1
                     const { ref: rhfRef, ...rest } = register(`names.${i}.value`)
                     return (
-                      <div key={field.id} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                        <span style={{
-                          width: 32, height: 32, borderRadius: '50%',
-                          background: 'var(--color-cream-2)', color: 'var(--color-ink)',
-                          display: 'flex', alignItems: 'center', justifyContent: 'center',
-                          fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: 14, flexShrink: 0,
-                        }}>{i + 1}</span>
+                      <div key={field.id} className="flex items-center gap-2.5">
+                        <span className="w-8 h-8 rounded-full bg-cream-2 text-ink flex items-center justify-center font-heading font-bold text-[14px] shrink-0">
+                          {i + 1}
+                        </span>
                         <input
                           {...rest}
                           ref={el => {
                             rhfRef(el)
                             if (isLast) lastInputRef.current = el
                           }}
-                          style={{
-                            flex: 1, background: '#fff',
-                            border: '1.5px solid var(--color-sand-500)',
-                            borderRadius: 14, padding: '10px 14px',
-                            fontFamily: 'var(--font-sans)', fontSize: 15,
-                            color: 'var(--color-ink)', outline: 'none',
-                          }}
+                          className="flex-1 bg-white border-[1.5px] border-sand-500 rounded-[14px] px-3.5 py-2.5 font-sans text-[15px] text-ink outline-none focus:border-teal-500 focus:ring-3 focus:ring-teal-300/50"
                           placeholder={`Uczestnik ${i + 1}`}
-                          onFocus={e => { e.currentTarget.style.borderColor = 'var(--color-teal-500)'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(168,216,220,0.50)' }}
-                          onBlur={e => { e.currentTarget.style.borderColor = 'var(--color-sand-500)'; e.currentTarget.style.boxShadow = 'none' }}
                           onKeyDown={e => {
                             if (e.key === 'Enter' && watchedNames[i]?.value.trim()) {
                               e.preventDefault()
@@ -207,13 +160,7 @@ export default function TripDetailView() {
                           <button
                             type="button"
                             onClick={() => remove(i)}
-                            style={{
-                              width: 32, height: 32, borderRadius: '50%',
-                              border: '1.5px solid rgba(45,49,66,0.15)',
-                              background: 'transparent', color: 'var(--color-ink-soft)',
-                              cursor: 'pointer', fontSize: 16,
-                              display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-                            }}
+                            className="w-8 h-8 rounded-full border-[1.5px] border-[rgba(45,49,66,0.15)] bg-transparent text-ink-soft cursor-pointer text-[16px] flex items-center justify-center shrink-0"
                           >×</button>
                         )}
                       </div>
@@ -223,86 +170,52 @@ export default function TripDetailView() {
                   <button
                     type="button"
                     onClick={appendAndFocus}
-                    style={{
-                      background: 'transparent',
-                      border: '1.5px dashed var(--color-sand-500)',
-                      borderRadius: 14, padding: '10px 14px',
-                      fontFamily: 'var(--font-sans)', fontWeight: 600, fontSize: 14,
-                      color: 'var(--color-ink-soft)', cursor: 'pointer', textAlign: 'left',
-                    }}
+                    className="bg-transparent border-[1.5px] border-dashed border-sand-500 rounded-[14px] px-3.5 py-2.5 font-sans font-semibold text-[14px] text-ink-soft cursor-pointer text-left"
                   >+ Dodaj uczestnika</button>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 20 }}>
-                  <span style={{
-                    display: 'flex', alignItems: 'center', gap: 8,
-                    background: 'var(--color-butter)', borderRadius: 999,
-                    padding: '6px 14px 6px 6px', fontSize: 13,
-                    fontFamily: 'var(--font-sans)', fontWeight: 600,
-                  }}>
-                    <span style={{
-                      background: 'var(--color-ink)', color: 'var(--color-cream)',
-                      borderRadius: '50%', width: 22, height: 22,
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      fontSize: 11, fontWeight: 700,
-                    }}>{validNames.length}</span>
+                <div className="flex items-center justify-between mt-5">
+                  <span className="flex items-center gap-2 bg-butter rounded-full py-1.5 pr-3.5 pl-1.5 text-[13px] font-sans font-semibold">
+                    <span className="bg-ink text-cream rounded-full w-[22px] h-[22px] flex items-center justify-center text-[11px] font-bold">
+                      {validNames.length}
+                    </span>
                     uczestników gotowych
                   </span>
                   <button
                     type="submit"
                     disabled={!canDraw || drawing}
-                    style={{
-                      fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: 16,
-                      padding: '12px 24px', borderRadius: 999,
-                      border: '1.5px solid var(--color-ink)',
-                      background: canDraw ? 'var(--color-peach-300)' : 'var(--color-sand-200)',
-                      color: 'var(--color-ink)',
-                      cursor: canDraw && !drawing ? 'pointer' : 'not-allowed',
-                      opacity: canDraw && !drawing ? 1 : 0.5,
-                    }}
+                    className={`font-heading font-bold text-base px-6 py-3 rounded-full border-[1.5px] border-ink text-ink transition-opacity ${canDraw ? 'bg-peach-300 cursor-pointer opacity-100' : 'bg-sand-200 cursor-not-allowed opacity-50'}`}
                   >{drawing ? 'Losuję...' : 'Losuj 🎲'}</button>
                 </div>
               </form>
             </>
           ) : (
             <>
-              <div style={{ marginBottom: 24 }}>
-                <div style={{
-                  fontFamily: 'var(--font-sans)', fontWeight: 700, fontSize: 11,
-                  letterSpacing: '0.06em', textTransform: 'uppercase',
-                  color: 'rgba(45,49,66,0.55)', marginBottom: 8,
-                }}>Wylosowane</div>
-                <h2 style={{
-                  fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: 26,
-                  lineHeight: 1.1, letterSpacing: '-0.02em', margin: 0,
-                }}>Linki z przydziałami</h2>
-                <p style={{ marginTop: 8, color: 'var(--color-ink-soft)', fontSize: 14 }}>
+              <div className="mb-6">
+                <div className="font-sans font-bold text-[11px] tracking-[0.06em] uppercase text-[rgba(45,49,66,0.55)] mb-2">
+                  Wylosowane
+                </div>
+                <h2 className="font-heading font-bold text-[26px] leading-[1.1] tracking-[-0.02em] m-0">
+                  Linki z przydziałami
+                </h2>
+                <p className="mt-2 text-ink-soft text-sm">
                   Wyślij każdy link prywatnie do odpowiedniego uczestnika.
                 </p>
               </div>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <div className="flex flex-col gap-3">
                 {trip.assignments.map(({ giverName, recipientName }, idx) => {
                   const link = buildAssignmentLink(base, giverName, recipientName, tripId)
                   const tone = AVATAR_TONES[idx % AVATAR_TONES.length]
                   return (
-                    <div key={giverName} style={{
-                      display: 'flex', alignItems: 'center', gap: 12,
-                      background: 'var(--color-cream)', borderRadius: 14, padding: '14px 16px',
-                    }}>
-                      <span style={{
-                        width: 40, height: 40, borderRadius: '50%',
-                        background: tone.bg, color: tone.color,
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: 18, flexShrink: 0,
-                      }}>{giverName[0]}</span>
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: 15 }}>{giverName}</div>
-                        <div style={{
-                          fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
-                          fontSize: 11, color: 'var(--color-ink-soft)',
-                          overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-                        }}>{link}</div>
+                    <div key={giverName} className="flex items-center gap-3 bg-cream rounded-[14px] px-4 py-3.5">
+                      <span
+                        className="w-10 h-10 rounded-full flex items-center justify-center font-heading font-bold text-[18px] shrink-0"
+                        style={{ background: tone.bg, color: tone.color }}
+                      >{giverName[0]}</span>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-heading font-bold text-[15px]">{giverName}</div>
+                        <div className="font-mono text-[11px] text-ink-soft overflow-hidden text-ellipsis whitespace-nowrap">{link}</div>
                       </div>
                       <CopyButton text={link} />
                     </div>
@@ -310,21 +223,20 @@ export default function TripDetailView() {
                 })}
               </div>
 
-              <div style={{ marginTop: 20, textAlign: 'center' }}>
-                <div style={{
-                  height: 14, backgroundRepeat: 'repeat-x', backgroundSize: '60px 14px',
-                  backgroundImage: "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 14'><path d='M0 7 Q15 0 30 7 T60 7' fill='none' stroke='%232E7C82' stroke-width='2' stroke-linecap='round'/></svg>\")",
-                  marginBottom: 12,
-                }} />
-                <p style={{ color: 'rgba(45,49,66,0.45)', fontSize: 13 }}>
+              <div className="mt-5 text-center">
+                <div
+                  className="h-[14px] mb-3 bg-repeat-x"
+                  style={{
+                    backgroundSize: '60px 14px',
+                    backgroundImage: "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 14'><path d='M0 7 Q15 0 30 7 T60 7' fill='none' stroke='%232E7C82' stroke-width='2' stroke-linecap='round'/></svg>\")",
+                  }}
+                />
+                <p className="text-[rgba(45,49,66,0.45)] text-[13px]">
                   Kliknięcie linku ujawni przydział po podaniu rozmiaru
                 </p>
                 <button
                   onClick={() => setTrip(prev => prev ? { ...prev, assignments: [] } : prev)}
-                  style={{
-                    marginTop: 8, fontSize: 12, color: 'var(--color-ink-soft)',
-                    background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline',
-                  }}
+                  className="mt-2 text-[12px] text-ink-soft bg-none bg-transparent border-none cursor-pointer underline"
                 >Losuj ponownie</button>
               </div>
             </>
@@ -332,12 +244,7 @@ export default function TripDetailView() {
         </div>
 
         {!hasAssignments && (
-          <div style={{
-            marginTop: 12, textAlign: 'center',
-            fontFamily: 'var(--font-hand)', fontWeight: 700, fontSize: 18,
-            color: 'var(--color-peach-700)', transform: 'rotate(-1.5deg)',
-            display: 'block', fontStyle: 'italic',
-          }}>
+          <div className="mt-3 text-center font-hand font-bold text-[18px] text-peach-700 rotate-[-1.5deg] inline-block italic w-full">
             ↑ minimum 2 osoby, żeby losowanie miało sens
           </div>
         )}
