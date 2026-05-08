@@ -4,6 +4,11 @@ export interface Trip {
   createdAt: string
 }
 
+export interface TripDetail extends Trip {
+  participants: string[]
+  assignments: { giverName: string; recipientName: string }[]
+}
+
 export interface Assignment {
   giver: string
   recipient: string

@@ -14,6 +14,13 @@ export const participants = sqliteTable('participants', {
   submittedAt: text('submitted_at').notNull(),
 }, (t) => [primaryKey({ columns: [t.tripId, t.name] })])
 
+export const assignments = sqliteTable('assignments', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  tripId: integer('trip_id').notNull(),
+  giverName: text('giver_name').notNull(),
+  recipientName: text('recipient_name').notNull(),
+})
+
 export const pendingNotifications = sqliteTable('pending_notifications', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   tripId: integer('trip_id').notNull(),

@@ -1,4 +1,4 @@
-import type { RecipientSizeResult, NotifyResult, Trip } from './types'
+import type { RecipientSizeResult, NotifyResult, Trip, TripDetail } from './types'
 
 const BASE = import.meta.env.VITE_API_URL ?? ''
 
@@ -48,4 +48,12 @@ export async function fetchTrips(): Promise<Trip[]> {
 
 export async function createTrip(name: string): Promise<Trip> {
   return apiClient.post('/api/trips', { name })
+}
+
+export async function fetchTrip(id: number): Promise<TripDetail> {
+  return apiClient.get(`/api/trips/${id}`)
+}
+
+export async function runDraw(tripId: number, participants: string[]): Promise<{ giverName: string; recipientName: string }[]> {
+  return apiClient.post(`/api/trips/${tripId}/draw`, { participants })
 }
