@@ -144,7 +144,7 @@ export default function RevealView() {
     mutationFn: () => subscribeNotification(assignment!.tripId, assignment!.giver, email, assignment!.recipient),
     onSuccess: (result) => {
       if ('alreadyKnown' in result) {
-        queryClient.setQueryData(['recipientSize', assignment?.recipient], { known: true, size: result.size })
+        queryClient.setQueryData(['recipientSize', assignment?.tripId, assignment?.recipient], { known: true, size: result.size })
       } else {
         setNotified(true)
       }
@@ -320,36 +320,9 @@ export default function RevealView() {
 
         {isKnown ? (
           <div style={{ marginTop: 20, textAlign: 'center' }}>
-            <p style={{ color: 'var(--color-ink-soft)', fontSize: 14, marginBottom: 16 }}>
+            <p style={{ color: 'var(--color-ink-soft)', fontSize: 14, margin: 0 }}>
               Znamy już rozmiar — czas na zakupy!
             </p>
-            <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
-              <button style={{
-                fontFamily: 'var(--font-sans)',
-                fontWeight: 600,
-                fontSize: 14,
-                padding: '10px 20px',
-                borderRadius: 999,
-                border: '1.5px solid rgba(45,49,66,0.20)',
-                background: 'transparent',
-                color: 'var(--color-ink)',
-                cursor: 'pointer',
-              }}>Zapisz w kalendarzu</button>
-              <button
-                onClick={async () => { await navigator.clipboard.writeText(knownSize ?? '') }}
-                style={{
-                  fontFamily: 'var(--font-sans)',
-                  fontWeight: 600,
-                  fontSize: 14,
-                  padding: '10px 20px',
-                  borderRadius: 999,
-                  border: '1.5px solid var(--color-ink)',
-                  background: 'var(--color-cream)',
-                  color: 'var(--color-ink)',
-                  cursor: 'pointer',
-                }}
-              >Skopiuj rozmiar</button>
-            </div>
           </div>
         ) : notified ? (
           <div style={{

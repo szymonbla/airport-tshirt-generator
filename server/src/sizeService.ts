@@ -36,7 +36,7 @@ export function createSizeService(db: DrizzleDb, sendEmail: EmailSender) {
         await db.delete(pendingNotifications).where(eq(pendingNotifications.id, row.id)).run()
       }
 
-      return recipientRow ? { known: true, size: recipientRow.size } : { known: false }
+      return recipientRow?.size ? { known: true, size: recipientRow.size } : { known: false }
     },
 
     async subscribeNotification(tripId: number, giver: string, email: string, recipientName: string): Promise<NotifyResult> {
