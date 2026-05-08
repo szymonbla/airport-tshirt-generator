@@ -33,9 +33,14 @@ A tool for organizing a Secret Santa-style t-shirt exchange among a remote frien
 7. If placeholder: Participant enters their email on the result screen to subscribe for a Size Notification.
 8. When Recipient later submits their Size, a Size Notification email is sent to subscribed Givers.
 
+## Language
+
+The app UI is in **Polish**. All user-facing strings (labels, buttons, messages, email copy) must be in Polish.
+
 ## Tech
 
 - React + Vite + Tailwind + shadcn/ui
 - Node.js + Hono backend + SQLite (stores Participant sizes and emails)
 - Resend for transactional email (Size Notifications)
 - Assignment encoded in URL (base64-obfuscated)
+- `sonner` for toast notifications (bottom-right)

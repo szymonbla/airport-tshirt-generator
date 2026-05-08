@@ -1,11 +1,24 @@
 // @vitest-environment jsdom
-import { describe, it, expect, afterEach } from 'vitest'
-import { render, screen, cleanup } from '@testing-library/react'
+import { describe, it, expect, afterEach, vi, beforeEach } from 'vitest'
+import { render, screen, cleanup, fireEvent, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import RevealView from './RevealView'
 import { encode } from '../lib/linkCodec'
+import * as api from '../lib/api'
 
-afterEach(cleanup)
+vi.mock('../lib/api')
+
+afterEach(() => {
+  cleanup()
+  localStorage.clear()
+  vi.resetAllMocks()
+})
+
+beforeEach(() => {
+  vi.mocked(api.submitSize).mockResolvedValue({ known: false })
+  vi.mocked(api.fetchRecipientSize).mockResolvedValue(null)
+  vi.mocked(api.subscribeNotification).mockResolvedValue({ subscribed: true })
+})
 
 function renderWithRoute(hash: string) {
   render(
@@ -16,12 +29,6 @@ function renderWithRoute(hash: string) {
 }
 
 describe('RevealView', () => {
-  it('displays recipient name for valid link', () => {
-    const encoded = encode({ giver: 'Alice', recipient: 'Bob' })
-    renderWithRoute(`?r=${encoded}`)
-    expect(screen.getByText('Bob')).toBeInTheDocument()
-  })
-
   it('shows error for invalid link', () => {
     renderWithRoute('?r=garbage')
     expect(screen.getByText('Invalid link')).toBeInTheDocument()
@@ -30,5 +37,38 @@ describe('RevealView', () => {
   it('shows error when param missing', () => {
     renderWithRoute('')
     expect(screen.getByText('Invalid link')).toBeInTheDocument()
+  })
+
+  it('shows size gate on fresh load', () => {
+    const encoded = encode({ giver: 'Alice', recipient: 'Bob' })
+    renderWithRoute(`?r=${encoded}`)
+    expect(screen.getByText('UJAWNIJ PRZYDZIAŁ')).toBeInTheDocument()
+  })
+
+  it('displays recipient name after size submission', async () => {
+    vi.mocked(api.submitSize).mockResolvedValue({ known: false })
+    const encoded = encode({ giver: 'Alice', recipient: 'Bob' })
+    renderWithRoute(`?r=${encoded}`)
+    fireEvent.click(screen.getByText('M'))
+    fireEvent.click(screen.getByText('UJAWNIJ PRZYDZIAŁ'))
+    await waitFor(() => expect(screen.getByText('Bob')).toBeInTheDocument())
+  })
+
+  it('shows recipient size when known after submission', async () => {
+    vi.mocked(api.submitSize).mockResolvedValue({ known: true, size: 'L' })
+    const encoded = encode({ giver: 'Alice', recipient: 'Bob' })
+    renderWithRoute(`?r=${encoded}`)
+    fireEvent.click(screen.getByText('S'))
+    fireEvent.click(screen.getByText('UJAWNIJ PRZYDZIAŁ'))
+    await waitFor(() => expect(screen.getByText('L')).toBeInTheDocument())
+  })
+
+  it('skips gate when localStorage has previous submission', async () => {
+    const encoded = encode({ giver: 'Alice', recipient: 'Bob' })
+    localStorage.setItem(`reveal:${encoded}`, JSON.stringify({ size: 'S' }))
+    vi.mocked(api.fetchRecipientSize).mockResolvedValue('XL')
+    renderWithRoute(`?r=${encoded}`)
+    await waitFor(() => expect(screen.getByText('Bob')).toBeInTheDocument())
+    expect(screen.getByText('XL')).toBeInTheDocument()
   })
 })
