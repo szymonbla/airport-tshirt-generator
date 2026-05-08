@@ -130,7 +130,8 @@
   body {
     @apply bg-background text-foreground;
     background-image: url('/src/assets/bg-halftone.png');
-    background-size: 600px;
+    background-size: cover;
+    background-repeat: no-repeat;
     background-blend-mode: multiply;
   }
   html {
