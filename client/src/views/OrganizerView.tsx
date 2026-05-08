@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useRef } from 'react'
 import { useForm, useFieldArray } from 'react-hook-form'
 import { Button } from '../components/ui/button'
 import { drawEngine, type Assignment } from '../lib/drawEngine'
@@ -35,9 +35,11 @@ export default function OrganizerView() {
   const [assignments, setAssignments] = useState<Assignment[] | null>(null)
 
   const lastInputRef = useRef<HTMLInputElement | null>(null)
-  useEffect(() => {
-    lastInputRef.current?.focus()
-  }, [fields.length])
+
+  const appendAndFocus = () => {
+    append({ value: '' })
+    requestAnimationFrame(() => lastInputRef.current?.focus())
+  }
 
   const watchedNames = watch('names')
   const validNames = watchedNames.map(f => f.value.trim()).filter(Boolean)
@@ -70,7 +72,7 @@ export default function OrganizerView() {
                   onKeyDown={e => {
                     if (e.key === 'Enter' && watchedNames[i]?.value.trim()) {
                       e.preventDefault()
-                      if (isLast) append({ value: '' })
+                      if (isLast) appendAndFocus()
                     }
                   }}
                 />
@@ -82,7 +84,7 @@ export default function OrganizerView() {
               </div>
             )
           })}
-          <Button variant="outline" type="button" onClick={() => append({ value: '' })}>
+          <Button variant="outline" type="button" onClick={appendAndFocus}>
             + Dodaj uczestnika
           </Button>
         </div>
