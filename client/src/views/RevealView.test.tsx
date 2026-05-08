@@ -35,43 +35,43 @@ function renderWithRoute(hash: string) {
 describe('RevealView', () => {
   it('shows error for invalid link', () => {
     renderWithRoute('?r=garbage')
-    expect(screen.getByText('Invalid link')).toBeInTheDocument()
+    expect(screen.getByText('Ten link jest dziwny.')).toBeInTheDocument()
   })
 
   it('shows error when param missing', () => {
     renderWithRoute('')
-    expect(screen.getByText('Invalid link')).toBeInTheDocument()
+    expect(screen.getByText('Ten link jest dziwny.')).toBeInTheDocument()
   })
 
   it('shows size gate on fresh load', () => {
     const encoded = encode({ giver: 'Alice', recipient: 'Bob' })
     renderWithRoute(`?r=${encoded}`)
-    expect(screen.getByText('UJAWNIJ PRZYDZIAŁ')).toBeInTheDocument()
+    expect(screen.getByText('Rozpakuj walizkę')).toBeInTheDocument()
   })
 
   it('displays recipient name after size submission', async () => {
     vi.mocked(api.submitSize).mockResolvedValue({ known: false })
     const encoded = encode({ giver: 'Alice', recipient: 'Bob' })
     renderWithRoute(`?r=${encoded}`)
-    fireEvent.click(screen.getByText('M'))
-    fireEvent.click(screen.getByText('UJAWNIJ PRZYDZIAŁ'))
+    fireEvent.click(screen.getByText('GRUBY'))
+    fireEvent.click(screen.getByText('Rozpakuj walizkę'))
     await waitFor(() => expect(screen.getByText('Bob')).toBeInTheDocument())
   })
 
   it('shows recipient size when known after submission', async () => {
-    vi.mocked(api.submitSize).mockResolvedValue({ known: true, size: 'L' })
+    vi.mocked(api.submitSize).mockResolvedValue({ known: true, size: 'DUŻY EUROPEJSKI' })
     const encoded = encode({ giver: 'Alice', recipient: 'Bob' })
     renderWithRoute(`?r=${encoded}`)
-    fireEvent.click(screen.getByText('S'))
-    fireEvent.click(screen.getByText('UJAWNIJ PRZYDZIAŁ'))
-    await waitFor(() => expect(screen.getByText('L')).toBeInTheDocument())
+    fireEvent.click(screen.getByText('MEGA MAŁY'))
+    fireEvent.click(screen.getByText('Rozpakuj walizkę'))
+    await waitFor(() => expect(screen.getByText('DUŻY EUROPEJSKI')).toBeInTheDocument())
   })
 
   it('skips gate when localStorage has previous submission', async () => {
     const encoded = encode({ giver: 'Alice', recipient: 'Bob' })
-    localStorage.setItem(`reveal:${encoded}`, JSON.stringify({ size: 'S' }))
-    vi.mocked(api.fetchRecipientSize).mockResolvedValue('XL')
+    localStorage.setItem(`reveal:${encoded}`, JSON.stringify({ size: 'GRUBY' }))
+    vi.mocked(api.fetchRecipientSize).mockResolvedValue('DUŻY EUROPEJSKI')
     renderWithRoute(`?r=${encoded}`)
-    await waitFor(() => expect(screen.getByText('XL')).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByText('DUŻY EUROPEJSKI')).toBeInTheDocument())
   })
 })
