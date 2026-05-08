@@ -24,6 +24,7 @@ dist-ssr
 # Env
 .env
 .env.*
+!client/.env.production
 
 # SQLite
 *.db
