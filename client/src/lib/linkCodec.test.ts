@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { encode, decode, type Assignment } from './linkCodec';
+import { encode, decode, buildAssignmentLink, type Assignment } from './linkCodec';
 
 const pair: Assignment = { giver: 'Alice', recipient: 'Bob' }
 
@@ -37,5 +37,20 @@ describe('linkCodec', () => {
 
   it('encode produces stable URL-safe output', () => {
     expect(encode(pair)).toMatch(/^[A-Za-z0-9\-_]+$/)
+  })
+})
+
+describe('buildAssignmentLink', () => {
+  it('builds a decodable link', () => {
+    const link = buildAssignmentLink('https://example.com/', 'Alice', 'Bob')
+    const hash = new URL(link).hash // '#/reveal?r=...'
+    const param = hash.replace('#/reveal?r=', '')
+    expect(decode(param)).toEqual({ giver: 'Alice', recipient: 'Bob' })
+  })
+
+  it('encoded param is URL-safe', () => {
+    const link = buildAssignmentLink('https://example.com/', 'Alice', 'Bob')
+    const param = new URL(link).hash.replace('#/reveal?r=', '')
+    expect(param).toMatch(/^[A-Za-z0-9\-_]+$/)
   })
 })

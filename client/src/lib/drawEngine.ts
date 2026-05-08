@@ -1,7 +1,5 @@
-export interface Assignment {
-  giver: string;
-  recipient: string;
-}
+import type { Assignment } from './types'
+export type { Assignment } from './types'
 
 export function drawEngine(participants: string[]): Assignment[] {
   if (participants.length < 2) {

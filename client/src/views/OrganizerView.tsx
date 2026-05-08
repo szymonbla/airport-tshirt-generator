@@ -2,11 +2,11 @@ import { useState, useEffect, useRef } from 'react'
 import { useForm, useFieldArray } from 'react-hook-form'
 import { Button } from '../components/ui/button'
 import { drawEngine, type Assignment } from '../lib/drawEngine'
-import { encode } from '../lib/linkCodec'
+import { buildAssignmentLink } from '../lib/linkCodec'
 
 function assignmentLink(giver: string, recipient: string): string {
   const base = window.location.origin + window.location.pathname
-  return `${base}#/reveal?r=${encode({ giver, recipient })}`
+  return buildAssignmentLink(base, giver, recipient)
 }
 
 function CopyButton({ text }: { text: string }) {

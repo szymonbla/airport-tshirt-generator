@@ -3,9 +3,9 @@ import { decode } from '../lib/linkCodec'
 
 export default function RevealView() {
   const [searchParams] = useSearchParams()
-  const recipient = decode(searchParams.get('r') ?? '')
+  const assignment = decode(searchParams.get('r') ?? '')
 
-  if (!recipient) {
+  if (!assignment) {
     return (
       <main className="flex min-h-screen items-center justify-center p-6">
         <div className="text-center max-w-sm">
@@ -21,7 +21,7 @@ export default function RevealView() {
     <main className="flex min-h-screen items-center justify-center p-6">
       <div className="text-center max-w-sm">
         <p className="text-sm text-gray-500 uppercase tracking-wide mb-2">You're buying a t-shirt for</p>
-        <h1 className="text-4xl font-bold">{recipient}</h1>
+        <h1 className="text-4xl font-bold">{assignment.recipient}</h1>
       </div>
     </main>
   )

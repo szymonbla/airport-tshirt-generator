@@ -1,9 +1,7 @@
-export interface Assignment {
-  giver: string
-  recipient: string
-}
+import type { AssignmentPayload } from './types'
+export type { Assignment } from './types'
 
-export function encode(assignment: Assignment): string {
+export function encode(assignment: AssignmentPayload): string {
   const json = JSON.stringify({ g: assignment.giver, r: assignment.recipient })
   return btoa(encodeURIComponent(json))
     .replace(/\+/g, '-')
@@ -11,7 +9,7 @@ export function encode(assignment: Assignment): string {
     .replace(/=+$/, '')
 }
 
-export function decode(param: string): Assignment | null {
+export function decode(param: string): AssignmentPayload | null {
   if (!param) return null
   try {
     const base64 = param.replace(/-/g, '+').replace(/_/g, '/')
@@ -22,4 +20,8 @@ export function decode(param: string): Assignment | null {
   } catch {
     return null
   }
+}
+
+export function buildAssignmentLink(base: string, giver: string, recipient: string): string {
+  return `${base}#/reveal?r=${encode({ giver, recipient })}`
 }
