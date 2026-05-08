@@ -1,0 +1,9 @@
+name = "szmatex-server"
+main = "src/index.ts"
+compatibility_date = "2025-05-01"
+compatibility_flags = ["nodejs_compat"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "szmatex"
+database_id = "REPLACE_WITH_YOUR_DATABASE_ID"

@@ -1,12 +1,18 @@
 import { Hono } from 'hono'
-import { serve } from '@hono/node-server'
-import { db } from './db.js'
+import { openDb } from './db.js'
+import { makeSendSizeNotification } from './email.js'
 import { sizeRoutes } from './routes/size.js'
+import type { AppEnv } from './types.js'
 
-const app = new Hono()
+const app = new Hono<AppEnv>()
+
+app.use('*', async (c, next) => {
+  c.set('db', openDb(c.env.DB))
+  c.set('sendEmail', makeSendSizeNotification(c.env.RESEND_API_KEY))
+  await next()
+})
 
 app.get('/api/health', (c) => c.json({ ok: true }))
-app.route('/api', sizeRoutes(db))
+app.route('/api', sizeRoutes)
 
-const port = Number(process.env.PORT ?? 3001)
-serve({ fetch: app.fetch, port }, () => console.log(`Server running on port ${port}`))
+export default app

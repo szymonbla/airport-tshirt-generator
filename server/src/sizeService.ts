@@ -16,35 +16,31 @@ export function createSizeService(db: DrizzleDb, sendEmail: EmailSender) {
   return {
     async submitSize(giver: string, size: string, recipientName: string): Promise<RecipientSizeResult> {
       const now = new Date().toISOString()
-      db.insert(participants)
+      await db.insert(participants)
         .values({ name: giver, size, submittedAt: now })
         .onConflictDoUpdate({ target: participants.name, set: { size, submittedAt: now } })
         .run()
 
-      const recipientRow = db.select({ size: participants.size })
+      const recipientRow = await db.select({ size: participants.size })
         .from(participants)
         .where(eq(participants.name, recipientName))
         .get()
 
-      const pending = db.select({ id: pendingNotifications.id, giverEmail: pendingNotifications.giverEmail })
+      const pending = await db.select({ id: pendingNotifications.id, giverEmail: pendingNotifications.giverEmail })
         .from(pendingNotifications)
         .where(eq(pendingNotifications.recipient, giver))
         .all()
 
-      if (pending.length > 0) {
-        for (const row of pending) {
-          await sendEmail(row.giverEmail, giver, size)
-        }
-        for (const row of pending) {
-          db.delete(pendingNotifications).where(eq(pendingNotifications.id, row.id)).run()
-        }
+      for (const row of pending) {
+        await sendEmail(row.giverEmail, giver, size)
+        await db.delete(pendingNotifications).where(eq(pendingNotifications.id, row.id)).run()
       }
 
       return recipientRow ? { known: true, size: recipientRow.size } : { known: false }
     },
 
     async subscribeNotification(giver: string, email: string, recipientName: string): Promise<NotifyResult> {
-      const recipientRow = db.select({ size: participants.size })
+      const recipientRow = await db.select({ size: participants.size })
         .from(participants)
         .where(eq(participants.name, recipientName))
         .get()
@@ -54,14 +50,14 @@ export function createSizeService(db: DrizzleDb, sendEmail: EmailSender) {
       }
 
       const now = new Date().toISOString()
-      db.update(participants).set({ email }).where(eq(participants.name, giver)).run()
-      db.insert(pendingNotifications).values({ giverEmail: email, recipient: recipientName, createdAt: now }).run()
+      await db.update(participants).set({ email }).where(eq(participants.name, giver)).run()
+      await db.insert(pendingNotifications).values({ giverEmail: email, recipient: recipientName, createdAt: now }).run()
 
       return { subscribed: true }
     },
 
-    getSize(name: string): string | null {
-      const row = db.select({ size: participants.size })
+    async getSize(name: string): Promise<string | null> {
+      const row = await db.select({ size: participants.size })
         .from(participants)
         .where(eq(participants.name, name))
         .get()
