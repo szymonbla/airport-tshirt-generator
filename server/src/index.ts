@@ -3,6 +3,7 @@ import { cors } from 'hono/cors'
 import { openDb } from './db.js'
 import { makeSendSizeNotification } from './email.js'
 import { sizeRoutes } from './routes/size.js'
+import { tripRoutes } from './routes/trips.js'
 import type { AppEnv } from './types.js'
 
 const app = new Hono<AppEnv>()
@@ -17,5 +18,6 @@ app.use('*', async (c, next) => {
 
 app.get('/api/health', (c) => c.json({ ok: true }))
 app.route('/api', sizeRoutes)
+app.route('/api', tripRoutes)
 
 export default app

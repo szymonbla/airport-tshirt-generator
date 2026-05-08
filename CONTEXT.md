@@ -4,6 +4,8 @@ A tool for organizing a Secret Santa-style t-shirt exchange among a remote frien
 
 ## Glossary
 
+**Trip** — a named event (e.g. "Wakacje Chorwacja 2025") that groups a specific set of Participants for one t-shirt exchange. Participants are scoped to a Trip — the same person can appear in multiple Trips as separate records. Each Trip has exactly one active Draw at a time; re-drawing replaces the previous Assignments. Displayed as "Trip" in the Polish UI.
+
 **Draw** — the act of randomly assigning each Participant a Recipient. Constraints: no self-assignment. Mutual pairs (A→B and B→A) are allowed.
 
 **Participant** — a person taking part in the exchange, both as a Giver and a Recipient.
@@ -14,9 +16,9 @@ A tool for organizing a Secret Santa-style t-shirt exchange among a remote frien
 
 **Assignment** — a single Giver→Recipient pair produced by the Draw.
 
-**Assignment Link** — a unique URL generated for each Participant after the Draw. Opening it reveals only that Participant's Recipient. The Assignment is encoded (base64-obfuscated) in the URL — not plaintext — to prevent casual snooping by non-technical users.
+**Assignment Link** — a unique URL generated for each Participant after the Draw. Opening it reveals only that Participant's Recipient. The Assignment is encoded (base64-obfuscated) in the URL — not plaintext — to prevent casual snooping by non-technical users. Encodes `{ g: giver, r: recipient, w: wyjazd_id }` so the server can scope the lookup to the correct Trip.
 
-**Organizer** — the person who runs the Draw, enters all Participant names, and distributes Assignment Links privately (e.g. via WhatsApp).
+**Organizer** — the person who creates a Trip, runs the Draw, and distributes Assignment Links privately (e.g. via WhatsApp). Organizer access is via the `/admin` path — no authentication, access by URL knowledge.
 
 **Size** — a Participant's t-shirt size, one of: XS, S, M, L, XL, 2XL. Entered by the Participant on the Reveal page before seeing their Recipient. Stored server-side and shown to whoever is buying for that Participant.
 
@@ -24,14 +26,17 @@ A tool for organizing a Secret Santa-style t-shirt exchange among a remote frien
 
 ## Flow
 
-1. Organizer enters all Participant names in the app.
-2. Organizer clicks "Draw" — app produces one Assignment per Participant.
-3. App generates one Assignment Link per Participant.
-4. Organizer copies each link and sends it privately to the correct Participant.
-5. Participant opens their link → enters their Size → hits the red detonator button.
-6. Participant sees their Recipient's name and Size (or a placeholder if Recipient hasn't submitted yet).
-7. If placeholder: Participant enters their email on the result screen to subscribe for a Size Notification.
-8. When Recipient later submits their Size, a Size Notification email is sent to subscribed Givers.
+1. Organizer opens `/admin` — sees list of all Tripys.
+2. Organizer creates a new Trip (enters name) or opens an existing one.
+3. Organizer enters all Participant names and clicks "Draw" — app produces one Assignment per Participant.
+4. Assignments are saved to the database (scoped to the Trip).
+5. App generates one Assignment Link per Participant (encodes giver, recipient, wyjazd_id).
+6. Organizer copies each link and sends it privately to the correct Participant.
+7. Participant opens their link → enters their Size → hits the red detonator button.
+8. Participant sees their Recipient's name and Size (or a placeholder if Recipient hasn't submitted yet).
+9. If placeholder: Participant enters their email on the result screen to subscribe for a Size Notification.
+10. When Recipient later submits their Size, a Size Notification email is sent to subscribed Givers.
+11. Organizer can return to `/admin/wyjazd/:id` at any time to resend a lost Assignment Link.
 
 ## Language
 

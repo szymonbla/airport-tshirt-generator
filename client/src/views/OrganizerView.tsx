@@ -1,12 +1,13 @@
 import { useState, useRef } from 'react'
 import { useForm, useFieldArray } from 'react-hook-form'
+import { useSearchParams } from 'react-router-dom'
 import { drawEngine, type Assignment } from '../lib/drawEngine'
 import { buildAssignmentLink } from '../lib/linkCodec'
 import { Wordmark } from '../components/icons'
 
-function assignmentLink(giver: string, recipient: string): string {
+function assignmentLink(giver: string, recipient: string, tripId: number): string {
   const base = window.location.origin + window.location.pathname
-  return buildAssignmentLink(base, giver, recipient)
+  return buildAssignmentLink(base, giver, recipient, tripId)
 }
 
 const AVATAR_TONES = [
@@ -49,6 +50,8 @@ function CopyButton({ text }: { text: string }) {
 type FormValues = { names: { value: string }[] }
 
 export default function OrganizerView() {
+  const [searchParams] = useSearchParams()
+  const tripId = Number(searchParams.get('trip') ?? 0)
   const { register, control, handleSubmit, watch } = useForm<FormValues>({
     defaultValues: { names: [{ value: '' }] },
   })
@@ -310,7 +313,7 @@ export default function OrganizerView() {
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 {assignments.map(({ giver, recipient }, idx) => {
-                  const link = assignmentLink(giver, recipient)
+                  const link = assignmentLink(giver, recipient, tripId)
                   const tone = AVATAR_TONES[idx % AVATAR_TONES.length]
                   return (
                     <div key={giver} style={{

@@ -1,4 +1,4 @@
-import type { RecipientSizeResult, NotifyResult } from './types'
+import type { RecipientSizeResult, NotifyResult, Trip } from './types'
 
 const BASE = import.meta.env.VITE_API_URL ?? ''
 
@@ -29,15 +29,23 @@ export const apiClient = {
   },
 }
 
-export async function submitSize(giver: string, size: string, recipient: string): Promise<RecipientSizeResult> {
-  return apiClient.post('/api/size', { name: giver, size, recipientName: recipient })
+export async function submitSize(tripId: number, giver: string, size: string, recipient: string): Promise<RecipientSizeResult> {
+  return apiClient.post('/api/size', { tripId, name: giver, size, recipientName: recipient })
 }
 
-export async function subscribeNotification(giver: string, email: string, recipient: string): Promise<NotifyResult> {
-  return apiClient.post('/api/notify', { name: giver, email, recipientName: recipient })
+export async function subscribeNotification(tripId: number, giver: string, email: string, recipient: string): Promise<NotifyResult> {
+  return apiClient.post('/api/notify', { tripId, name: giver, email, recipientName: recipient })
 }
 
-export async function fetchRecipientSize(recipient: string): Promise<string | null> {
-  const data = await apiClient.get<{ size: string | null }>(`/api/size/${encodeURIComponent(recipient)}`)
+export async function fetchRecipientSize(tripId: number, recipient: string): Promise<string | null> {
+  const data = await apiClient.get<{ size: string | null }>(`/api/size/${encodeURIComponent(recipient)}?tripId=${tripId}`)
   return data.size
+}
+
+export async function fetchTrips(): Promise<Trip[]> {
+  return apiClient.get('/api/trips')
+}
+
+export async function createTrip(name: string): Promise<Trip> {
+  return apiClient.post('/api/trips', { name })
 }

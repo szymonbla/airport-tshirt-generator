@@ -121,9 +121,9 @@ export default function RevealView() {
   const [notified, setNotified] = useState(false)
 
   const { data: recipientResult } = useQuery({
-    queryKey: ['recipientSize', assignment?.recipient],
+    queryKey: ['recipientSize', assignment?.tripId, assignment?.recipient],
     queryFn: async () => {
-      const size = await fetchRecipientSize(assignment!.recipient)
+      const size = await fetchRecipientSize(assignment!.tripId, assignment!.recipient)
       return size ? { known: true as const, size } : { known: false as const }
     },
     enabled: state === 'submitted' && !!assignment,
@@ -131,7 +131,7 @@ export default function RevealView() {
   })
 
   const submitMutation = useMutation({
-    mutationFn: () => submitSize(assignment!.giver, selectedSize, assignment!.recipient),
+    mutationFn: () => submitSize(assignment!.tripId, assignment!.giver, selectedSize, assignment!.recipient),
     onSuccess: (result) => {
       localStorage.setItem(storageKey(r), JSON.stringify({ size: selectedSize }))
       setState('submitted')
@@ -141,7 +141,7 @@ export default function RevealView() {
   })
 
   const notifyMutation = useMutation({
-    mutationFn: () => subscribeNotification(assignment!.giver, email, assignment!.recipient),
+    mutationFn: () => subscribeNotification(assignment!.tripId, assignment!.giver, email, assignment!.recipient),
     onSuccess: (result) => {
       if ('alreadyKnown' in result) {
         queryClient.setQueryData(['recipientSize', assignment?.recipient], { known: true, size: result.size })
