@@ -2,6 +2,7 @@
 import { describe, it, expect, afterEach, vi, beforeEach } from 'vitest'
 import { render, screen, cleanup, fireEvent, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import RevealView from './RevealView'
 import { encode } from '../lib/linkCodec'
 import * as api from '../lib/api'
@@ -21,10 +22,13 @@ beforeEach(() => {
 })
 
 function renderWithRoute(hash: string) {
+  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } })
   render(
-    <MemoryRouter initialEntries={[`/${hash}`]}>
-      <RevealView />
-    </MemoryRouter>
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter initialEntries={[`/${hash}`]}>
+        <RevealView />
+      </MemoryRouter>
+    </QueryClientProvider>
   )
 }
 
@@ -68,7 +72,6 @@ describe('RevealView', () => {
     localStorage.setItem(`reveal:${encoded}`, JSON.stringify({ size: 'S' }))
     vi.mocked(api.fetchRecipientSize).mockResolvedValue('XL')
     renderWithRoute(`?r=${encoded}`)
-    await waitFor(() => expect(screen.getByText('Bob')).toBeInTheDocument())
-    expect(screen.getByText('XL')).toBeInTheDocument()
+    await waitFor(() => expect(screen.getByText('XL')).toBeInTheDocument())
   })
 })

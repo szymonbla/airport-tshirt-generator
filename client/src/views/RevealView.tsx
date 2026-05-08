@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { decode } from '../lib/linkCodec'
 import { VALID_SIZES } from '../lib/types'
 import { submitSize, subscribeNotification, fetchRecipientSize } from '../lib/api'
-import type { RecipientSizeResult } from '../lib/types'
 
 type State = 'gate' | 'submitted'
 
@@ -14,31 +14,46 @@ export default function RevealView() {
   const [searchParams] = useSearchParams()
   const assignment = decode(searchParams.get('r') ?? '')
 
-  const [state, setState] = useState<State>('gate')
+  const queryClient = useQueryClient()
+  const r = searchParams.get('r') ?? ''
+  const alreadySubmitted = !!assignment && !!localStorage.getItem(storageKey(r))
+
+  const [state, setState] = useState<State>(alreadySubmitted ? 'submitted' : 'gate')
   const [selectedSize, setSelectedSize] = useState('')
-  const [recipientResult, setRecipientResult] = useState<RecipientSizeResult | null>(null)
   const [email, setEmail] = useState('')
   const [notified, setNotified] = useState(false)
-  const [submitting, setSubmitting] = useState(false)
 
-  const r = searchParams.get('r') ?? ''
+  const { data: recipientResult } = useQuery({
+    queryKey: ['recipientSize', assignment?.recipient],
+    queryFn: async () => {
+      const size = await fetchRecipientSize(assignment!.recipient)
+      return size ? { known: true as const, size } : { known: false as const }
+    },
+    enabled: state === 'submitted' && !!assignment,
+    retry: false,
+  })
 
-  useEffect(() => {
-    if (!assignment) return
-    const stored = localStorage.getItem(storageKey(r))
-    if (!stored) return
-    const { size } = JSON.parse(stored)
-    if (!size) return
-    fetchRecipientSize(assignment.recipient)
-      .then(s => {
-        setRecipientResult(s ? { known: true, size: s } : { known: false })
-        setState('submitted')
-      })
-      .catch(() => {
-        setRecipientResult({ known: false })
-        setState('submitted')
-      })
-  }, [])
+  const submitMutation = useMutation({
+    mutationFn: () => submitSize(assignment!.giver, selectedSize, assignment!.recipient),
+    onSuccess: (result) => {
+      localStorage.setItem(storageKey(r), JSON.stringify({ size: selectedSize }))
+      setState('submitted')
+      if (result.known) return
+    },
+    onError: () => toast.error('Nie udało się zapisać rozmiaru. Spróbuj ponownie.'),
+  })
+
+  const notifyMutation = useMutation({
+    mutationFn: () => subscribeNotification(assignment!.giver, email, assignment!.recipient),
+    onSuccess: (result) => {
+      if (result.alreadyKnown) {
+        queryClient.setQueryData(['recipientSize', assignment?.recipient], { known: true, size: result.size })
+      } else {
+        setNotified(true)
+      }
+    },
+    onError: () => toast.error('Nie udało się zapisać powiadomienia. Spróbuj ponownie.'),
+  })
 
   if (!assignment) {
     return (
@@ -52,37 +67,7 @@ export default function RevealView() {
     )
   }
 
-  async function handleSubmit() {
-    if (!selectedSize || !assignment) return
-    setSubmitting(true)
-    try {
-      const result = await submitSize(assignment.giver, selectedSize, assignment.recipient)
-      localStorage.setItem(storageKey(r), JSON.stringify({ size: selectedSize }))
-      setRecipientResult(result)
-      setState('submitted')
-    } catch {
-      toast.error('Nie udało się zapisać rozmiaru. Spróbuj ponownie.')
-    } finally {
-      setSubmitting(false)
-    }
-  }
-
-  async function handleNotify() {
-    if (!email || !assignment) return
-    setSubmitting(true)
-    try {
-      const result = await subscribeNotification(assignment.giver, email, assignment.recipient)
-      if (result.alreadyKnown) {
-        setRecipientResult({ known: true, size: result.size })
-      } else {
-        setNotified(true)
-      }
-    } catch {
-      toast.error('Nie udało się zapisać powiadomienia. Spróbuj ponownie.')
-    } finally {
-      setSubmitting(false)
-    }
-  }
+  const displayResult = submitMutation.data ?? recipientResult
 
   if (state === 'gate') {
     return (
@@ -109,11 +94,11 @@ export default function RevealView() {
             ))}
           </div>
           <button
-            onClick={handleSubmit}
-            disabled={!selectedSize || submitting}
+            onClick={() => submitMutation.mutate()}
+            disabled={!selectedSize || submitMutation.isPending}
             className="w-full py-4 bg-red-600 hover:bg-red-700 disabled:opacity-40 text-white font-bold text-lg rounded-lg transition-colors"
           >
-            {submitting ? 'Zapisuję…' : 'UJAWNIJ PRZYDZIAŁ'}
+            {submitMutation.isPending ? 'Zapisuję…' : 'UJAWNIJ PRZYDZIAŁ'}
           </button>
         </div>
       </main>
@@ -128,10 +113,10 @@ export default function RevealView() {
           <h1 className="text-4xl font-bold">{assignment.recipient}</h1>
         </div>
 
-        {recipientResult?.known ? (
+        {displayResult?.known ? (
           <div className="bg-gray-50 rounded-lg p-4">
             <p className="text-sm text-gray-500">Rozmiar tej osoby</p>
-            <p className="text-3xl font-bold">{recipientResult.size}</p>
+            <p className="text-3xl font-bold">{displayResult.size}</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -150,11 +135,11 @@ export default function RevealView() {
                   className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-black"
                 />
                 <button
-                  onClick={handleNotify}
-                  disabled={!email || submitting}
+                  onClick={() => notifyMutation.mutate()}
+                  disabled={!email || notifyMutation.isPending}
                   className="w-full py-2 bg-black text-white font-medium rounded disabled:opacity-40 hover:bg-gray-800 transition-colors"
                 >
-                  {submitting ? 'Zapisuję…' : 'Powiadom mnie'}
+                  {notifyMutation.isPending ? 'Zapisuję…' : 'Powiadom mnie'}
                 </button>
               </div>
             ) : (
