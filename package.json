@@ -1,0 +1,7 @@
+{
+  "name": "szmatex-root",
+  "private": true,
+  "scripts": {
+    "test:e2e": "cd e2e && bun run test"
+  }
+}
