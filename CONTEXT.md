@@ -18,16 +18,24 @@ A tool for organizing a Secret Santa-style t-shirt exchange among a remote frien
 
 **Organizer** — the person who runs the Draw, enters all Participant names, and distributes Assignment Links privately (e.g. via WhatsApp).
 
+**Size** — a Participant's t-shirt size, one of: XS, S, M, L, XL, 2XL. Entered by the Participant on the Reveal page before seeing their Recipient. Stored server-side and shown to whoever is buying for that Participant.
+
+**Size Notification** — an email sent to a Giver when their Recipient submits their Size. Only sent if the Giver subscribed (entered their email on the result screen) while the Recipient's size was still unknown.
+
 ## Flow
 
 1. Organizer enters all Participant names in the app.
 2. Organizer clicks "Draw" — app produces one Assignment per Participant.
 3. App generates one Assignment Link per Participant.
 4. Organizer copies each link and sends it privately to the correct Participant.
-5. Participant opens their link and sees their Recipient revealed.
+5. Participant opens their link → enters their Size → hits the red detonator button.
+6. Participant sees their Recipient's name and Size (or a placeholder if Recipient hasn't submitted yet).
+7. If placeholder: Participant enters their email on the result screen to subscribe for a Size Notification.
+8. When Recipient later submits their Size, a Size Notification email is sent to subscribed Givers.
 
 ## Tech
 
 - React + Vite + Tailwind + shadcn/ui
-- Static frontend only (no backend) — Assignment encoded in URL
-- Future: lobby/simultaneous reveal feature (requires backend)
+- Node.js + Hono backend + SQLite (stores Participant sizes and emails)
+- Resend for transactional email (Size Notifications)
+- Assignment encoded in URL (base64-obfuscated)
