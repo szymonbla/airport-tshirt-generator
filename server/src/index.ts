@@ -8,7 +8,7 @@ import type { AppEnv } from './types.js'
 
 const app = new Hono<AppEnv>()
 
-app.use('*', cors({ origin: 'https://airport-tshirt-generator.pages.dev' }))
+app.use('*', cors({ origin: ['https://airport-tshirt-generator.pages.dev', 'http://localhost:5173'] }))
 
 app.use('*', async (c, next) => {
   c.set('db', openDb(c.env.DB))
