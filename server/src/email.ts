@@ -1,14 +1,18 @@
-import { Resend } from 'resend'
-
-export function makeSendSizeNotification(apiKey: string | undefined) {
+export function makeSendSizeNotification(apiKey: string | undefined, senderEmail: string | undefined) {
   return async (giverEmail: string, recipientName: string, size: string) => {
-    if (!apiKey) return
-    const resend = new Resend(apiKey)
-    await resend.emails.send({
-      from: 'onboarding@resend.dev',
-      to: giverEmail,
-      subject: `[Koszulki] ${recipientName} podał swój rozmiar`,
-      text: `${recipientName} ma rozmiar ${size}. Możesz teraz kupić koszulkę!`,
+    if (!apiKey || !senderEmail) return
+    await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: {
+        'api-key': apiKey,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        sender: { email: senderEmail },
+        to: [{ email: giverEmail }],
+        subject: `[Koszulki] ${recipientName} podał swój rozmiar`,
+        textContent: `${recipientName} ma rozmiar ${size}. Możesz teraz kupić koszulkę!`,
+      }),
     })
   }
 }

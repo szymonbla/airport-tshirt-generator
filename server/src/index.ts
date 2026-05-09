@@ -12,7 +12,7 @@ app.use('*', cors({ origin: ['https://airport-tshirt-generator.pages.dev', 'http
 
 app.use('*', async (c, next) => {
   c.set('db', openDb(c.env.DB))
-  c.set('sendEmail', makeSendSizeNotification(c.env.RESEND_API_KEY))
+  c.set('sendEmail', makeSendSizeNotification(c.env.BREVO_API_KEY, c.env.BREVO_SENDER_EMAIL))
   await next()
 })
 

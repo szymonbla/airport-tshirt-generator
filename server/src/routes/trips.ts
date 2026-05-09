@@ -70,7 +70,7 @@ app.post('/trips/:id/draw', async (c) => {
   return c.json(inserted.map(a => ({ giverName: a.giverName, recipientName: a.recipientName })), 201)
 })
 
-function derange(names: string[]): { giver: string; recipient: string }[] {
+export function derange(names: string[]): { giver: string; recipient: string }[] {
   const recipients = [...names]
   do {
     for (let i = recipients.length - 1; i > 0; i--) {
