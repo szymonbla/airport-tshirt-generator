@@ -23,5 +23,5 @@ export function decode(param: string): AssignmentPayload | null {
 }
 
 export function buildAssignmentLink(base: string, giver: string, recipient: string, tripId: number): string {
-  return `${base}#/reveal?r=${encode({ giver, recipient, tripId })}`
+  return `${base}reveal?r=${encode({ giver, recipient, tripId })}`
 }

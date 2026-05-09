@@ -42,9 +42,9 @@ describe('RevealView', () => {
     expect(screen.getByText('Ten link jest dziwny.')).toBeInTheDocument()
   })
 
-  it('shows error when param missing', () => {
+  it('shows neutral page when param missing', () => {
     renderWithRoute('')
-    expect(screen.getByText('Ten link jest dziwny.')).toBeInTheDocument()
+    expect(screen.getByText('Szmatex')).toBeInTheDocument()
   })
 
   it('shows size gate on fresh load', () => {

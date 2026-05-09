@@ -49,14 +49,13 @@ describe('linkCodec', () => {
 describe('buildAssignmentLink', () => {
   it('builds a decodable link', () => {
     const link = buildAssignmentLink('https://example.com/', 'Alice', 'Bob', 1)
-    const hash = new URL(link).hash // '#/reveal?r=...'
-    const param = hash.replace('#/reveal?r=', '')
+    const param = new URL(link).searchParams.get('r')!
     expect(decode(param)).toEqual({ giver: 'Alice', recipient: 'Bob', tripId: 1 })
   })
 
   it('encoded param is URL-safe', () => {
     const link = buildAssignmentLink('https://example.com/', 'Alice', 'Bob', 1)
-    const param = new URL(link).hash.replace('#/reveal?r=', '')
+    const param = new URL(link).searchParams.get('r')!
     expect(param).toMatch(/^[A-Za-z0-9\-_]+$/)
   })
 })
