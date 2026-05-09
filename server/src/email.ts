@@ -1,7 +1,7 @@
 export function makeSendSizeNotification(apiKey: string | undefined, senderEmail: string | undefined) {
   return async (giverEmail: string, recipientName: string, size: string) => {
     if (!apiKey || !senderEmail) return
-    await fetch('https://api.brevo.com/v3/smtp/email', {
+    const res = await fetch('https://api.brevo.com/v3/smtp/email', {
       method: 'POST',
       headers: {
         'api-key': apiKey,
@@ -14,5 +14,8 @@ export function makeSendSizeNotification(apiKey: string | undefined, senderEmail
         textContent: `${recipientName} ma rozmiar ${size}. Możesz teraz kupić koszulkę!`,
       }),
     })
+    if (!res.ok) {
+      console.error('Brevo error', res.status, await res.text())
+    }
   }
 }
