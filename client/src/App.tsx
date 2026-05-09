@@ -1,4 +1,4 @@
-import { HashRouter, Route, Routes, Navigate } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { Toaster } from 'sonner'
 import RevealView from './views/RevealView'
 import AdminView from './views/AdminView'
@@ -6,14 +6,14 @@ import TripDetailView from './views/TripDetailView'
 
 export default function App() {
   return (
-    <HashRouter>
+    <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Navigate to="/admin" replace />} />
+        <Route path="/" element={<RevealView />} />
         <Route path="/reveal" element={<RevealView />} />
-        <Route path="/admin" element={<AdminView />} />
-        <Route path="/admin/trip/:id" element={<TripDetailView />} />
+        <Route path="/backstage" element={<AdminView />} />
+        <Route path="/backstage/trip/:id" element={<TripDetailView />} />
       </Routes>
       <Toaster position="bottom-right" />
-    </HashRouter>
+    </BrowserRouter>
   )
 }

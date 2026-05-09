@@ -29,12 +29,12 @@ export default function AdminView() {
 
   return (
     <div className="min-h-screen font-sans text-ink">
-      <div className="flex items-center px-6 pt-5 max-w-[600px] mx-auto">
+      <div className="flex items-center px-4 sm:px-6 pt-5 max-w-[600px] mx-auto">
         <Wordmark />
       </div>
 
-      <div className="max-w-[600px] mx-auto mt-6 px-4 pb-10">
-        <div className="bg-white rounded-[22px] shadow-[0_1px_0_rgba(45,49,66,0.06),0_8px_24px_-12px_rgba(45,49,66,0.18)] py-8 px-7">
+      <div className="max-w-[600px] mx-auto mt-6 px-3 sm:px-4 pb-10">
+        <div className="bg-white rounded-[22px] shadow-[0_1px_0_rgba(45,49,66,0.06),0_8px_24px_-12px_rgba(45,49,66,0.18)] py-6 sm:py-8 px-4 sm:px-7">
           <div className="mb-7">
             <div className="font-sans font-bold text-[11px] tracking-[0.06em] uppercase text-[rgba(45,49,66,0.55)] mb-2">
               Organizator
@@ -44,7 +44,7 @@ export default function AdminView() {
             </h1>
           </div>
 
-          <form onSubmit={handleCreate} className="flex gap-2.5 mb-7">
+          <form onSubmit={handleCreate} className="flex flex-col sm:flex-row gap-2.5 mb-7">
             <input
               value={name}
               onChange={e => setName(e.target.value)}
@@ -54,7 +54,7 @@ export default function AdminView() {
             <button
               type="submit"
               disabled={!name.trim() || creating}
-              className={`font-heading font-bold text-[15px] px-5 py-2.5 rounded-full border-[1.5px] border-ink text-ink whitespace-nowrap transition-opacity ${name.trim() ? 'bg-peach-300 cursor-pointer opacity-100' : 'bg-sand-200 cursor-not-allowed opacity-50'}`}
+              className={`w-full sm:w-auto font-heading font-bold text-[15px] px-5 py-2.5 rounded-full border-[1.5px] border-ink text-ink whitespace-nowrap transition-opacity ${name.trim() ? 'bg-peach-300 cursor-pointer opacity-100' : 'bg-sand-200 cursor-not-allowed opacity-50'}`}
             >Nowy Wyjazd</button>
           </form>
 
@@ -67,7 +67,7 @@ export default function AdminView() {
               {trips.map(trip => (
                 <Link
                   key={trip.id}
-                  to={`/admin/trip/${trip.id}`}
+                  to={`/backstage/trip/${trip.id}`}
                   className="flex items-center justify-between bg-cream rounded-[14px] px-[18px] py-3.5 no-underline text-ink"
                 >
                   <span className="font-heading font-bold text-base">{trip.name}</span>

@@ -1,4 +1,9 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
+import dzienDobry from '../assets/dzien-dobry.mp4'
+import smiech from '../assets/smiech.mp4'
+import zart1 from '../assets/zart-1.mp4'
+import zart2 from '../assets/zart-2.mp4'
+import pizza from '../assets/pizza.mp4'
 import { useSearchParams, useNavigate } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
@@ -24,7 +29,7 @@ function PageShell({ children }: { children: React.ReactNode }) {
 
 function Card({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={`bg-white rounded-[22px] shadow-[0_1px_0_rgba(45,49,66,0.06),0_8px_24px_-12px_rgba(45,49,66,0.18)] py-8 px-7 ${className ?? ''}`}>
+    <div className={`bg-white rounded-[22px] shadow-[0_1px_0_rgba(45,49,66,0.06),0_8px_24px_-12px_rgba(45,49,66,0.18)] py-6 sm:py-8 px-4 sm:px-7 ${className ?? ''}`}>
       {children}
     </div>
   )
@@ -68,7 +73,13 @@ export default function RevealView() {
 
   const [state, setState] = useState<State>(alreadySubmitted ? 'submitted' : 'gate')
   const [selectedSize, setSelectedSize] = useState('')
-  const [email, setEmail] = useState('')
+  const dzienDobryRef = useRef<HTMLAudioElement>(null)
+  const smiechRef = useRef<HTMLAudioElement>(null)
+  const zart1Ref = useRef<HTMLAudioElement>(null)
+  const zart2Ref = useRef<HTMLAudioElement>(null)
+  const pizzaRef = useRef<HTMLAudioElement>(null)
+
+const [email, setEmail] = useState('')
   const [notified, setNotified] = useState(false)
 
   const { data: recipientResult } = useQuery({
@@ -104,10 +115,25 @@ export default function RevealView() {
   })
 
   if (!assignment) {
+    if (!searchParams.get('r')) {
+      return (
+        <PageShell>
+          <Card className="text-center px-7 py-12">
+            <TshirtIcon size={64} />
+            <h2 className="font-heading font-bold text-[26px] m-0 mb-3 mt-6 text-ink">
+              Szmatex
+            </h2>
+            <p className="text-ink-soft text-[15px] leading-[1.5]">
+              Użyj linku otrzymanego od organizatora wyjazdu.
+            </p>
+          </Card>
+        </PageShell>
+      )
+    }
     return (
       <PageShell>
         <Card className="text-center px-7 py-12">
-          <div className="font-heading font-extrabold text-[88px] text-peach-500 leading-none mb-6">
+          <div className="font-heading font-extrabold text-[56px] sm:text-[88px] text-peach-500 leading-none mb-6">
             ¯\_(ツ)_/¯
           </div>
           <h2 className="font-heading font-bold text-[26px] m-0 mb-3 text-ink">
@@ -136,7 +162,7 @@ export default function RevealView() {
           </div>
 
           <h1 className="font-heading font-extrabold text-[32px] leading-[1.1] tracking-[-0.02em] m-0 mb-2.5 text-ink">
-            Wpisz swój rozmiar
+            Wpisz swój rozmiar 🍆
           </h1>
 
           <p className="text-ink-soft text-[15px] leading-[1.5] mb-6">
@@ -147,10 +173,28 @@ export default function RevealView() {
             {VALID_SIZES.map(s => (
               <button
                 key={s}
-                onClick={() => setSelectedSize(s)}
+                onClick={() => {
+                  setSelectedSize(s)
+                  const allRefs = [dzienDobryRef, smiechRef, zart1Ref, zart2Ref, pizzaRef]
+                  allRefs.forEach(r => { const a = r.current; if (a) { a.pause(); a.currentTime = 0 } })
+                  const play = (ref: React.RefObject<HTMLAudioElement | null>) => {
+                    const a = ref.current; if (a) { a.currentTime = 0; a.play() }
+                  }
+                  play(dzienDobryRef)
+                  if (s === 'GRUBY') play(pizzaRef)
+                  else if (s === '2X GRUBY' || s === '3X GRUBY') play(pizzaRef)
+                  else if (s === 'DUŻY EUROPEJSKI') play(zart2Ref)
+                  else if (s === 'ŚREDNIA AZJATYCKA') play(zart1Ref)
+                  else if (s === 'MEGA MAŁY' || s === 'MAŁY, ALE ŚMIERDZI JAK DUŻY') play(smiechRef)
+                }}
                 className={`px-4 py-2 rounded-full border-[1.5px] font-sans font-semibold text-[15px] cursor-pointer transition-all duration-[120ms] ${selectedSize === s ? 'border-ink bg-ink text-cream' : 'border-sand-500 bg-white text-ink-soft'}`}
               >{s}</button>
             ))}
+            <audio ref={dzienDobryRef} src={dzienDobry} />
+            <audio ref={smiechRef} src={smiech} />
+            <audio ref={zart1Ref} src={zart1} />
+            <audio ref={zart2Ref} src={zart2} />
+            <audio ref={pizzaRef} src={pizza} />
           </div>
 
           <button
@@ -211,7 +255,7 @@ export default function RevealView() {
                 <div className="text-[13px] text-ink-soft">Wyślemy jeden mail. Bez spamu, słowo.</div>
               </div>
             </div>
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row gap-2">
               <input
                 type="email"
                 placeholder="twoj@email.com"
@@ -222,7 +266,7 @@ export default function RevealView() {
               <button
                 onClick={() => notifyMutation.mutate()}
                 disabled={!email || notifyMutation.isPending}
-                className={`font-sans font-semibold text-[14px] px-4 py-2.5 rounded-[14px] border-[1.5px] border-peach-500 bg-peach-300 text-ink whitespace-nowrap transition-opacity ${email ? 'cursor-pointer opacity-100' : 'cursor-not-allowed opacity-50'}`}
+                className={`w-full sm:w-auto font-sans font-semibold text-[14px] px-4 py-2.5 rounded-[14px] border-[1.5px] border-peach-500 bg-peach-300 text-ink whitespace-nowrap transition-opacity ${email ? 'cursor-pointer opacity-100' : 'cursor-not-allowed opacity-50'}`}
               >{notifyMutation.isPending ? 'Zapisuję…' : 'Powiadom mnie'}</button>
             </div>
           </div>

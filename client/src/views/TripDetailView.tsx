@@ -102,7 +102,7 @@ export default function TripDetailView() {
 
   return (
     <div className="min-h-screen font-sans text-ink">
-      <div className="flex items-center justify-between px-6 pt-5 max-w-[600px] mx-auto">
+      <div className="flex items-center justify-between px-4 sm:px-6 pt-5 max-w-[600px] mx-auto">
         <Wordmark />
         <span className="flex items-center gap-2 bg-teal-100 text-teal-700 rounded-full py-1.5 pr-3.5 pl-1.5 font-sans font-bold text-[13px] tracking-[0.04em] uppercase">
           <span className="w-[22px] h-[22px] rounded-full bg-ink text-cream flex items-center justify-center font-heading font-bold text-[12px]">
@@ -112,14 +112,14 @@ export default function TripDetailView() {
         </span>
       </div>
 
-      <div className="max-w-[600px] mx-auto mt-6 px-4 pb-10">
+      <div className="max-w-[600px] mx-auto mt-6 px-3 sm:px-4 pb-10">
         <div className="mb-4">
-          <Link to="/admin" className="text-[13px] text-ink-soft no-underline">
+          <Link to="/backstage" className="text-[13px] text-ink-soft no-underline">
             ← Wyjazdy
           </Link>
         </div>
 
-        <div className="bg-white rounded-[22px] shadow-[0_1px_0_rgba(45,49,66,0.06),0_8px_24px_-12px_rgba(45,49,66,0.18)] py-8 px-7">
+        <div className="bg-white rounded-[22px] shadow-[0_1px_0_rgba(45,49,66,0.06),0_8px_24px_-12px_rgba(45,49,66,0.18)] py-6 sm:py-8 px-4 sm:px-7">
           {!hasAssignments ? (
             <>
               <div className="mb-6">
@@ -174,8 +174,8 @@ export default function TripDetailView() {
                   >+ Dodaj uczestnika</button>
                 </div>
 
-                <div className="flex items-center justify-between mt-5">
-                  <span className="flex items-center gap-2 bg-butter rounded-full py-1.5 pr-3.5 pl-1.5 text-[13px] font-sans font-semibold">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between mt-5 gap-3">
+                  <span className="flex items-center gap-2 bg-butter rounded-full py-1.5 pr-3.5 pl-1.5 text-[13px] font-sans font-semibold self-start">
                     <span className="bg-ink text-cream rounded-full w-[22px] h-[22px] flex items-center justify-center text-[11px] font-bold">
                       {validNames.length}
                     </span>
@@ -184,7 +184,7 @@ export default function TripDetailView() {
                   <button
                     type="submit"
                     disabled={!canDraw || drawing}
-                    className={`font-heading font-bold text-base px-6 py-3 rounded-full border-[1.5px] border-ink text-ink transition-opacity ${canDraw ? 'bg-peach-300 cursor-pointer opacity-100' : 'bg-sand-200 cursor-not-allowed opacity-50'}`}
+                    className={`w-full sm:w-auto font-heading font-bold text-base px-6 py-3 rounded-full border-[1.5px] border-ink text-ink transition-opacity ${canDraw ? 'bg-peach-300 cursor-pointer opacity-100' : 'bg-sand-200 cursor-not-allowed opacity-50'}`}
                   >{drawing ? 'Losuję...' : 'Losuj 🎲'}</button>
                 </div>
               </form>
