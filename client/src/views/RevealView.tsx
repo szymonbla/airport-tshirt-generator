@@ -169,7 +169,7 @@ const [email, setEmail] = useState('')
             Twój prezentowy ujawni się dopiero po naciśnięciu walizki. Bez podglądania!
           </p>
 
-          <div className="flex flex-wrap justify-center gap-2 mb-7">
+          <div className="flex flex-wrap justify-center gap-2 mb-3">
             {VALID_SIZES.map(s => (
               <button
                 key={s}
@@ -195,6 +195,22 @@ const [email, setEmail] = useState('')
             <audio ref={zart1Ref} src={zart1} />
             <audio ref={zart2Ref} src={zart2} />
             <audio ref={pizzaRef} src={pizza} />
+          </div>
+
+          <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 mb-7 text-[12px] font-sans text-ink-soft">
+            {([
+              ['MEGA MAŁY', 'XS'],
+              ['MAŁY, ALE ŚMIERDZI JAK DUŻY', 'S'],
+              ['ŚREDNIA AZJATYCKA', 'M'],
+              ['DUŻY EUROPEJSKI', 'L'],
+              ['GRUBY', 'XL'],
+              ['2X GRUBY', '2XL'],
+              ['3X GRUBY', '3XL'],
+            ] as const).map(([label, code]) => (
+              <span key={code} className={`transition-all duration-[120ms] ${selectedSize === label ? 'text-ink font-semibold' : ''}`}>
+                {code} = {label}
+              </span>
+            ))}
           </div>
 
           <button
