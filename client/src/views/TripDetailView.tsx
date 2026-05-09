@@ -57,6 +57,10 @@ export default function TripDetailView() {
   }
 
   useEffect(() => {
+    if (!Number.isFinite(tripId)) {
+      setLoading(false)
+      return
+    }
     fetchTrip(tripId)
       .then(data => {
         setTrip(data)
@@ -98,7 +102,7 @@ export default function TripDetailView() {
   }
 
   const hasAssignments = trip.assignments.length > 0
-  const base = window.location.origin + window.location.pathname
+  const base = window.location.origin + '/'
 
   return (
     <div className="min-h-screen font-sans text-ink">
