@@ -287,6 +287,22 @@ const [email, setEmail] = useState('')
             </div>
           </div>
         )}
+
+        <div className="mt-5 flex flex-wrap justify-center gap-x-4 gap-y-1 text-[12px] font-sans text-ink-soft">
+          {([
+            ['MEGA MAŁY', 'XS'],
+            ['MAŁY, ALE ŚMIERDZI JAK DUŻY', 'S'],
+            ['ŚREDNIA AZJATYCKA', 'M'],
+            ['DUŻY EUROPEJSKI', 'L'],
+            ['GRUBY', 'XL'],
+            ['2X GRUBY', '2XL'],
+            ['3X GRUBY', '3XL'],
+          ] as const).map(([label, code]) => (
+            <span key={code} className={knownSize === label ? 'text-ink font-semibold' : ''}>
+              {code} = {label}
+            </span>
+          ))}
+        </div>
       </Card>
     </PageShell>
   )
